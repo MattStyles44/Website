@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Barlow, Barlow_Semi_Condensed } from "next/font/google";
 import type { ReactNode } from "react";
 
 import { JsonLdScript } from "@/components/json-ld";
@@ -10,6 +11,21 @@ import { env } from "@/env";
 import { organisatieJsonLd, websiteJsonLd } from "@/lib/seo/json-ld";
 
 import "./globals.css";
+
+// Zelf gehost via next/font: bezoekers laden niets bij Google.
+const barlow = Barlow({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
+  variable: "--font-barlow",
+});
+
+const barlowSemiCondensed = Barlow_Semi_Condensed({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  display: "swap",
+  variable: "--font-barlow-semi-condensed",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.APP_URL),
@@ -25,7 +41,10 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="nl" className="h-full antialiased">
+    <html
+      lang="nl"
+      className={`${barlow.variable} ${barlowSemiCondensed.variable} h-full antialiased`}
+    >
       <body className="flex min-h-full flex-col">
         <JsonLdScript
           data={[

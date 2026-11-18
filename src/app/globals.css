@@ -1,24 +1,105 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * Huisstijl van SignUp Reclame (docs/merk.md).
+ * De kleuren zijn precies dezelfde als `merkKleuren` in src/content/merk.ts
+ * (prettier-ignore houdt de hoofdletters gelijk). Alleen deze tokens bestaan:
+ * de standaardkleuren van Tailwind staan uit.
+ */
+/* prettier-ignore */
+@theme {
+  --color-*: initial;
+  --color-navy: #172746;
+  --color-blauw: #006D9A;
+  --color-wit: #FFFFFF;
+  --color-inkt-zacht: #666666;
+  --color-vlak: #EEF3F7;
+  --color-rand: #7A8699;
+  --color-fout: #B42318;
 }
 
+@theme {
+  /* Typografie: grote, strakke koppen en rustige lopende tekst. */
+  --text-display: 4.5rem;
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.01em;
+  --text-basis: 1.0625rem;
+  --text-basis--line-height: 1.6;
+  --text-intro: 1.25rem;
+  --text-intro--line-height: 1.6;
+  --leading-display: 1.05;
+  --leading-kop: 1.1;
+  --leading-tekst: 1.6;
+
+  /* Afgerond zoals de omlijning van het logo. */
+  --radius-veld: 0.75rem;
+  --radius-kaart: 1rem;
+
+  /* Overgangen voor hover en focus, nooit langer dan 200 ms. */
+  --default-transition-duration: 150ms;
+}
+
+/* De lettertypen laadt next/font in src/app/layout.tsx, zelf gehost. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --font-sans:
+    var(--font-barlow), ui-sans-serif, system-ui, "Segoe UI", Arial, sans-serif;
+  --font-display:
+    var(--font-barlow-semi-condensed), var(--font-barlow), ui-sans-serif,
+    system-ui, "Segoe UI", Arial, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
+/* Op navy vlakken: witte tekst en een witte focusrand. */
+@utility op-donker {
+  background-color: var(--color-navy);
+  color: var(--color-wit);
+  --kleur-focus: var(--color-wit);
+}
+
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    color-scheme: light;
+    --kleur-focus: var(--color-blauw);
+  }
+
+  body {
+    background-color: var(--color-wit);
+    color: var(--color-navy);
+    font-family: var(--font-sans);
+    font-size: var(--text-basis);
+    line-height: var(--leading-tekst);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: var(--leading-kop);
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--kleur-focus);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: var(--color-blauw);
+    color: var(--color-wit);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: system-ui, Arial, Helvetica, sans-serif;
+/* Geen beweging voor wie dat in het systeem heeft uitgezet. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
