@@ -1,8 +1,8 @@
 name: CI
 
 on:
+  # Elke push, op elke branch, plus pull requests.
   push:
-    branches: [main]
   pull_request:
 
 permissions:

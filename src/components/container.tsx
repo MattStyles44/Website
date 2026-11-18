@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
+/** Centreert pagina-inhoud. De <main> zelf staat in de root layout. */
 export function Container({
   children,
   className,
@@ -10,13 +11,13 @@ export function Container({
   className?: string;
 }) {
   return (
-    <main
+    <div
       className={cn(
-        "mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center gap-6 px-4 py-16",
+        "mx-auto flex w-full max-w-3xl flex-col gap-8 px-4 py-12",
         className,
       )}
     >
       {children}
-    </main>
+    </div>
   );
 }

@@ -8,7 +8,7 @@ export const envSchema = z.object({
   NODE_ENV: z
     .enum(["development", "test", "production"])
     .default("development"),
-  APP_NAME: z.string().trim().min(1).default("Next.js Foundation"),
+  APP_NAME: z.string().trim().min(1).default("SignUp Reclame"),
   APP_URL: z.url().default("http://localhost:3000"),
 });
 

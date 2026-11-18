@@ -7,10 +7,14 @@ Bron: interview fase 0, ronde 1 (17 november 2026). Dit bestand is de leidraad v
 - **Naam:** SignUp Reclame (`www.sign-up.nl`)
 - **Ervaring:** 25 jaar in het vak, bestaande naam.
 - **Omvang:** kleinschalig en wendbaar specialistisch bedrijf: eigenaar plus compagnon, met gespecialiseerde partners.
-- **Diensten:**
-  - Voertuigen: autobelettering, carwrapping
-  - Pand en buiten: gevelreclame, lichtreclame, reclameborden
-  - Interieur: muurteksten, fotobehang, interieurdecoratie
+- **Diensten** (dienstenlijst van SignUp, 18 november 2026; volledige teksten in `src/content/diensten.ts`):
+  1. **Voertuigreclame & carwrapping:** autobelettering en vlootbelettering, full carwrapping, partial wrapping, chrome delete (de-chromen), magneetplaten
+  2. **Gevelreclame & lichtreclame:** 3D-freesletters (onverlicht), 3D-doosletters (verlicht), lichtbakken en uitsteekbakken, gevelborden en spandoekframes
+  3. **Buitenreclame & bewegwijzering:** reclameborden en bouwborden, reclamezuilen en vrijstaande pylonen, bewegwijzering (buiten en binnen), vlaggen en banieren
+  4. **Interieurdecoratie & wandbekleding:** naadloos fotobehang, muurteksten en wandstickers, interieurwrapping, plexiglas en wandpanelen
+  5. **Raamfolies & glasdecoratie:** zandstraalfolie, raambelettering en etalagereclame, zonwerende en veiligheidsfolie
+  6. **Ontwerp, DTP & maatwerk:** ontwerp en visualisatie, DTP en bestandsvoorbereiding, beurs- en evenementensigning, demontage en verwijdering
+- **Prijzen:** alles is maatwerk; op de site staan geen prijzen (besluit 18 november 2026).
 
 ## Doelen
 
@@ -33,7 +37,7 @@ Bron: interview fase 0, ronde 1 (17 november 2026). Dit bestand is de leidraad v
 ## Doelgroep
 
 - **Primair (B2B):** MKB'ers, aannemers en bouwbedrijven, wagenparkbeheerders, startende ondernemers, schadeherstelbedrijven, evenementenorganisatoren.
-- **Secundair (particulier):** carwrapping.
+- **Secundair (particulier):** carwrapping en chrome delete.
 - **Regio:** Groningen en omstreken; Noord-Nederland (Groningen, Friesland, Drenthe).
 - **Hoe ze nu binnenkomen:** mond-tot-mondreclame, bestaande zakelijke relaties, lokaal netwerk, online zoeken.
 
@@ -47,7 +51,7 @@ Bron: interview fase 0, ronde 1 (17 november 2026). Dit bestand is de leidraad v
 
 | Drempel                            | Wat de site moet doen                                                                                                                                                  |
 | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Geen idee wat het kost             | Prijsindicaties of vanaf-prijzen per dienst, of een indicatie-tool; uitleg welke factoren de prijs bepalen.                                                            |
+| Geen idee wat het kost             | Geen prijzen op de site (alles maatwerk). Wel: duidelijk dat elke offerte vrijblijvend en op maat is, met reactie binnen 24 uur op werkdagen.                          |
 | Gedoe met bestanden aanleveren     | Eenvoudige upload in het offerteformulier die elk bestand accepteert, met uitleg (vector/EPS/PDF) en de belofte dat SignUp het bestand controleert of opnieuw opmaakt. |
 | Twijfel over kwaliteit en garantie | Materiaalmerken tonen, garantievoorwaarden, portfolio met voor/na-foto's, Google-reviews.                                                                              |
 
@@ -63,7 +67,7 @@ Zie ook [merk.md](merk.md) voor de merkidentiteit en [processen.md](processen.md
 ## Open punten
 
 - [x] Meetbare KPI's (zie hierboven)
-- [x] Prijsindicaties (zie processen.md; btw-weergave voor particulieren nog bevestigen)
+- [x] Prijsindicaties: vervallen, er komen geen prijzen op de site
 - [ ] Garantietermijn per dienst, voor op de site
 - [ ] Wat moet er van de huidige site bewaard blijven (URL's, teksten, foto's)?
 - [ ] Planning en budget

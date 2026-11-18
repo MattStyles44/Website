@@ -17,13 +17,14 @@ export default function Error({
 
   return (
     <Container>
-      <h1 className="text-3xl font-semibold">Something went wrong</h1>
+      <h1 className="text-3xl font-semibold">Er ging iets mis</h1>
+      <p>Probeer het opnieuw. Lukt het niet, bel of WhatsApp ons dan.</p>
       <button
         type="button"
         className="w-fit rounded border px-4 py-2"
         onClick={() => retry()}
       >
-        Try again
+        Opnieuw proberen
       </button>
     </Container>
   );
