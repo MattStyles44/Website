@@ -5,4 +5,7 @@ build
 coverage
 package-lock.json
 next-env.d.ts
+studio/dist
+studio/.sanity
+studio/seed/seed.ndjson
 *.tsbuildinfo
