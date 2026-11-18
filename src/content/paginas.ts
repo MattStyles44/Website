@@ -83,6 +83,26 @@ export function allePaden(): string[] {
   ];
 }
 
+/**
+ * Vaste Open Graph-velden. Next.js voegt `openGraph` niet samen met die van de
+ * layout maar vervangt het, dus elke pagina neemt deze velden zelf over.
+ */
+export const basisOpenGraph = {
+  locale: "nl_NL",
+  siteName: site.naam,
+  type: "website",
+} as const;
+
+/** Open Graph voor delen op sociale media en in chat-apps. */
+function openGraph(titel: string, omschrijving: string, pad: string) {
+  return {
+    ...basisOpenGraph,
+    title: titel,
+    description: omschrijving,
+    url: pad,
+  };
+}
+
 /** Metadata voor een vaste pagina, met canonical URL. */
 export function paginaMetadata(pagina: Pagina): Metadata {
   return {
@@ -90,6 +110,7 @@ export function paginaMetadata(pagina: Pagina): Metadata {
     title: pagina.pad === "/" ? { absolute: pagina.titel } : pagina.titel,
     description: pagina.omschrijving,
     alternates: { canonical: pagina.pad },
+    openGraph: openGraph(pagina.titel, pagina.omschrijving, pagina.pad),
   };
 }
 
@@ -118,10 +139,14 @@ export function categorieMetadata(categorieSlug: string): Metadata {
   if (!categorie) return {};
 
   const samenvatting = categorieSamenvatting(categorie);
+  const titel = `${categorie.naam} in Groningen`;
+  const omschrijving = `${samenvatting.charAt(0).toUpperCase()}${samenvatting.slice(1)}, op maat gemaakt door ${site.naam}. Vraag een vrijblijvende offerte aan.`;
+  const pad = categoriePad(categorie.slug);
   return {
-    title: `${categorie.naam} in Groningen`,
-    description: `${samenvatting.charAt(0).toUpperCase()}${samenvatting.slice(1)}, op maat gemaakt door ${site.naam}. Vraag een vrijblijvende offerte aan.`,
-    alternates: { canonical: categoriePad(categorie.slug) },
+    title: titel,
+    description: omschrijving,
+    alternates: { canonical: pad },
+    openGraph: openGraph(titel, omschrijving, pad),
   };
 }
 
@@ -133,9 +158,13 @@ export function dienstMetadata(
   const dienst = getDienst(categorieSlug, dienstSlug);
   if (!dienst) return {};
 
+  const titel = `${dienst.naam} in Groningen`;
+  const omschrijving = `${dienst.omschrijving} Vraag een vrijblijvende offerte aan bij ${site.naam}.`;
+  const pad = dienstPad(categorieSlug, dienst.slug);
   return {
-    title: `${dienst.naam} in Groningen`,
-    description: `${dienst.omschrijving} Vraag een vrijblijvende offerte aan bij ${site.naam}.`,
-    alternates: { canonical: dienstPad(categorieSlug, dienst.slug) },
+    title: titel,
+    description: omschrijving,
+    alternates: { canonical: pad },
+    openGraph: openGraph(titel, omschrijving, pad),
   };
 }

@@ -3,12 +3,20 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Container } from "@/components/container";
+import { JsonLdScript } from "@/components/json-ld";
 import { Kruimelpad } from "@/components/kruimelpad";
 import { OfferteCta } from "@/components/offerte-cta";
 import { RijkeTekst } from "@/components/rijke-tekst";
 import { categorieen, getCategorie } from "@/content/diensten";
-import { categorieMetadata, dienstPad, paginas } from "@/content/paginas";
+import {
+  categorieMetadata,
+  categoriePad,
+  dienstPad,
+  paginas,
+} from "@/content/paginas";
+import { env } from "@/env";
 import { haalCategorieTekst } from "@/lib/cms";
+import { kruimelpadJsonLd } from "@/lib/seo/json-ld";
 
 interface CategoriePageProps {
   params: Promise<{ categorie: string }>;
@@ -39,15 +47,22 @@ export default async function CategoriePage({ params }: CategoriePageProps) {
   const tekst = await haalCategorieTekst(categorie.slug);
   if (!tekst) notFound();
 
+  const kruimels = [
+    { label: "Home", href: "/" },
+    { label: paginas.diensten.titel, href: paginas.diensten.pad },
+    { label: categorie.naam },
+  ];
+
   return (
     <Container>
-      <Kruimelpad
-        items={[
-          { label: "Home", href: "/" },
-          { label: paginas.diensten.titel, href: paginas.diensten.pad },
-          { label: categorie.naam },
-        ]}
+      <JsonLdScript
+        data={kruimelpadJsonLd(
+          kruimels,
+          categoriePad(categorie.slug),
+          env.APP_URL,
+        )}
       />
+      <Kruimelpad items={kruimels} />
 
       <header className="flex flex-col gap-2">
         <h1 className="text-3xl font-semibold">{categorie.naam}</h1>

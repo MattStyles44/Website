@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
+import { JsonLdScript } from "@/components/json-ld";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { paginas } from "@/content/paginas";
-import { site } from "@/content/site";
+import { basisOpenGraph, paginas } from "@/content/paginas";
+import { site, vestiging } from "@/content/site";
 import { env } from "@/env";
+import { organisatieJsonLd, websiteJsonLd } from "@/lib/seo/json-ld";
 
 import "./globals.css";
 
@@ -16,11 +18,7 @@ export const metadata: Metadata = {
     default: paginas.home.titel,
   },
   description: paginas.home.omschrijving,
-  openGraph: {
-    locale: "nl_NL",
-    siteName: site.naam,
-    type: "website",
-  },
+  openGraph: basisOpenGraph,
 };
 
 export default function RootLayout({
@@ -29,6 +27,12 @@ export default function RootLayout({
   return (
     <html lang="nl" className="h-full antialiased">
       <body className="flex min-h-full flex-col">
+        <JsonLdScript
+          data={[
+            organisatieJsonLd(env.APP_URL, vestiging),
+            websiteJsonLd(env.APP_URL),
+          ]}
+        />
         <SiteHeader />
         <main id="inhoud" className="flex flex-1 flex-col">
           {children}
