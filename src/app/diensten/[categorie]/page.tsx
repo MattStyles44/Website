@@ -5,8 +5,10 @@ import { notFound } from "next/navigation";
 import { Container } from "@/components/container";
 import { Kruimelpad } from "@/components/kruimelpad";
 import { OfferteCta } from "@/components/offerte-cta";
+import { RijkeTekst } from "@/components/rijke-tekst";
 import { categorieen, getCategorie } from "@/content/diensten";
 import { categorieMetadata, dienstPad, paginas } from "@/content/paginas";
+import { haalCategorieTekst } from "@/lib/cms";
 
 interface CategoriePageProps {
   params: Promise<{ categorie: string }>;
@@ -34,6 +36,9 @@ export default async function CategoriePage({ params }: CategoriePageProps) {
   const categorie = getCategorie(slug);
   if (!categorie) notFound();
 
+  const tekst = await haalCategorieTekst(categorie.slug);
+  if (!tekst) notFound();
+
   return (
     <Container>
       <Kruimelpad
@@ -46,8 +51,11 @@ export default async function CategoriePage({ params }: CategoriePageProps) {
 
       <header className="flex flex-col gap-2">
         <h1 className="text-3xl font-semibold">{categorie.naam}</h1>
+        {tekst.intro && <p>{tekst.intro}</p>}
         <p>Alles op maat, met een vrijblijvende offerte vooraf.</p>
       </header>
+
+      <RijkeTekst value={tekst.tekst} />
 
       <ul className="flex flex-col gap-4">
         {categorie.diensten.map((dienst) => (

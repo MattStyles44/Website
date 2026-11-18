@@ -10,6 +10,17 @@ export const envSchema = z.object({
     .default("development"),
   APP_NAME: z.string().trim().min(1).default("SignUp Reclame"),
   APP_URL: z.url().default("http://localhost:3000"),
+  // Sanity (fase 4). Zonder project-ID toont de site de vaste teksten uit de code.
+  SANITY_PROJECT_ID: z
+    .string()
+    .regex(/^[a-z0-9]+$/, "Alleen kleine letters en cijfers.")
+    .optional(),
+  SANITY_DATASET: z
+    .string()
+    .regex(/^[a-z0-9_-]+$/, "Alleen kleine letters, cijfers, - en _.")
+    .default("production"),
+  // Geheim waarmee Sanity de webhook naar /api/revalidate ondertekent.
+  SANITY_WEBHOOK_SECRET: z.string().min(16).optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;
@@ -23,6 +34,9 @@ export function parseEnv(source: Record<string, string | undefined>): Env {
     NODE_ENV: source.NODE_ENV,
     APP_NAME: emptyToUndefined(source.APP_NAME),
     APP_URL: emptyToUndefined(source.APP_URL),
+    SANITY_PROJECT_ID: emptyToUndefined(source.SANITY_PROJECT_ID),
+    SANITY_DATASET: emptyToUndefined(source.SANITY_DATASET),
+    SANITY_WEBHOOK_SECRET: emptyToUndefined(source.SANITY_WEBHOOK_SECRET),
   });
 
   if (!result.success) {

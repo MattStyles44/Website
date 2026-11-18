@@ -65,10 +65,21 @@ Een taak is pas af als deze vijf checks slagen: `lint`, `typecheck`, `format:che
 docs/             bedrijfsbrief, merk en processen (leidend)
 src/app/          routes, layouts en API (route handlers)
 src/components/   gedeelde UI-componenten
+src/content/      vaste structuur: diensten, pagina's, navigatie, redirects
 src/lib/          hulpfuncties
+src/lib/cms/      inhoud uit Sanity (teksten en projecten)
 src/env.ts        gevalideerde omgevingsvariabelen
+studio/           Sanity Studio (eigen package), online op signup-reclame.sanity.studio
 tests/            Vitest-tests
 ```
+
+## Inhoud en CMS (Sanity)
+
+- **Structuur in de code, teksten in Sanity.** Welke categorieën en diensten er zijn, en hun webadressen, staat vast in `src/content/diensten.ts`. Sanity levert alleen de teksten per categorie en dienst, plus projecten. In de Studio kun je categorieën en diensten daarom niet aanmaken of verwijderen.
+- **Een dienst toevoegen:** in `src/content/diensten.ts`, met een concept in `studio/seed/concepten.ts`. Daarna in `studio/`: `npm run seed` en `npm run seed:import` (bestaande documenten blijven ongemoeid).
+- **Ophalen** gaat alleen via `src/lib/cms` (`'use cache'` met de tag `sanity`). Zonder `SANITY_PROJECT_ID` toont de site de vaste teksten uit de code, zodat CI en builds zonder Sanity werken.
+- **Verversen:** de webhook van Sanity roept `/api/revalidate` aan, ondertekend met `SANITY_WEBHOOK_SECRET`.
+- **Studio-wijzigingen:** `npm run typecheck` en `npx sanity schema validate` in `studio/`, daarna `npm run deploy`.
 
 ## Werkwijze
 

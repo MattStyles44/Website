@@ -8,6 +8,7 @@ describe("parseEnv", () => {
       NODE_ENV: "development",
       APP_NAME: "SignUp Reclame",
       APP_URL: "http://localhost:3000",
+      SANITY_DATASET: "production",
     });
   });
 
@@ -28,7 +29,31 @@ describe("parseEnv", () => {
       NODE_ENV: "production",
       APP_NAME: "My App",
       APP_URL: "https://example.com",
+      SANITY_DATASET: "production",
     });
+  });
+
+  it("accepts the Sanity settings", () => {
+    expect(
+      parseEnv({
+        SANITY_PROJECT_ID: "abc123",
+        SANITY_DATASET: "staging",
+        SANITY_WEBHOOK_SECRET: "een-lang-geheim-van-32-tekens!!",
+      }),
+    ).toMatchObject({
+      SANITY_PROJECT_ID: "abc123",
+      SANITY_DATASET: "staging",
+      SANITY_WEBHOOK_SECRET: "een-lang-geheim-van-32-tekens!!",
+    });
+  });
+
+  it("rejects an invalid Sanity project ID and a short webhook secret", () => {
+    expect(() => parseEnv({ SANITY_PROJECT_ID: "ABC 123" })).toThrow(
+      /SANITY_PROJECT_ID/,
+    );
+    expect(() => parseEnv({ SANITY_WEBHOOK_SECRET: "kort" })).toThrow(
+      /SANITY_WEBHOOK_SECRET/,
+    );
   });
 
   it("rejects an invalid NODE_ENV", () => {
