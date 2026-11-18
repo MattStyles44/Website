@@ -4,5 +4,4 @@ import { project } from "./project";
 
 export const schemaTypes = [categorie, dienst, project];
 
-/** Documenttypes die uit de code komen: niet aanmaken, dupliceren of verwijderen. */
-export const vasteTypes = ["categorie", "dienst"];
+export { vasteTypes } from "./vast";

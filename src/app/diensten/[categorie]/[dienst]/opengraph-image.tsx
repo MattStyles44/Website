@@ -1,3 +1,5 @@
+import { notFound } from "next/navigation";
+
 import { alleDiensten, getCategorie, getDienst } from "@/content/diensten";
 import { site } from "@/content/site";
 import {
@@ -25,8 +27,7 @@ export default async function Deelafbeelding({
   const { categorie: categorieSlug, dienst: dienstSlug } = await params;
   const categorie = getCategorie(categorieSlug);
   const dienst = getDienst(categorieSlug, dienstSlug);
-  return maakDeelafbeelding({
-    titel: dienst?.naam ?? site.slogan,
-    ...(categorie ? { ondertitel: categorie.naam } : {}),
-  });
+  // Net als de pagina: een onbekende combinatie is een 404, geen afbeelding.
+  if (!categorie || !dienst) notFound();
+  return maakDeelafbeelding({ titel: dienst.naam, ondertitel: categorie.naam });
 }

@@ -3,8 +3,9 @@ import {
   deelafbeeldingFormaat,
   maakDeelafbeelding,
 } from "@/lib/seo/deelafbeelding";
+import { standaardDeelafbeelding } from "@/lib/seo/standaard-deelafbeelding";
 
-export const alt = `${site.naam}: ${site.slogan}`;
+export const alt = standaardDeelafbeelding.alt;
 export const size = deelafbeeldingFormaat;
 export const contentType = "image/png";
 

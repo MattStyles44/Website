@@ -3,10 +3,8 @@ import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 
 import { schemaTypes, vasteTypes } from "./schemaTypes";
+import { toegestaneActies } from "./schemaTypes/vast";
 import { structure } from "./structure";
-
-/** Acties die niet mogen bij categorieën en diensten: die komen uit de code. */
-const verbodenActies = ["delete", "duplicate", "unpublish"];
 
 export default defineConfig({
   name: "default",
@@ -20,13 +18,7 @@ export default defineConfig({
       vorige.filter((template) => !vasteTypes.includes(template.schemaType)),
   },
   document: {
-    actions: (vorige, { schemaType }) =>
-      vasteTypes.includes(schemaType)
-        ? vorige.filter(
-            ({ action }) =>
-              action === undefined || !verbodenActies.includes(action),
-          )
-        : vorige,
+    actions: (vorige, { schemaType }) => toegestaneActies(vorige, schemaType),
     newDocumentOptions: (vorige) =>
       vorige.filter((optie) => !vasteTypes.includes(optie.templateId)),
   },
