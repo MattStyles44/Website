@@ -1,10 +1,12 @@
 /**
  * De twee e-mails bij een offerteaanvraag (docs/processen.md): de aanvraag
- * voor SignUp, met de bestanden erbij, en een bevestiging voor de klant.
+ * voor SignUp, met de bestanden erbij (en bij een afspraakverzoek een
+ * agendabestand), en een bevestiging voor de klant.
  */
 import { getCategorie, getDienst } from "@/content/diensten";
 import { site } from "@/content/site";
 import type { Bijlage, Mail } from "@/lib/mail";
+import { maakAfspraakIcs } from "@/lib/offerte/agenda";
 import type { Aanvraag } from "@/lib/offerte/aanvraag";
 import { isGroteKlus } from "@/lib/offerte/kwalificatie";
 
@@ -159,14 +161,48 @@ function grootte(bytes: number): string {
   return `${formatGetal(Math.round((bytes / (1024 * 1024)) * 10) / 10)} MB`;
 }
 
-/** De aanvraag voor SignUp, met antwoorden naar de klant. */
-export function maakInterneMail(aanvraag: Aanvraag, bijlagen: Bijlage[]): Mail {
+/** Het agendabestand bij een afspraakverzoek, als bijlage; zonder afspraak `undefined`. */
+function agendaBijlage(aanvraag: Aanvraag, nu: Date): Bijlage | undefined {
+  const ics = maakAfspraakIcs(aanvraag, { nu });
+  if (ics === undefined) return undefined;
+  return {
+    naam: "afspraakverzoek.ics",
+    type: "text/calendar; charset=utf-8",
+    inhoud: new TextEncoder().encode(ics),
+  };
+}
+
+/**
+ * De aanvraag voor SignUp, met antwoorden naar de klant. Bij een
+ * afspraakverzoek komt na de bestanden van de klant een agendabestand mee.
+ */
+export function maakInterneMail(
+  aanvraag: Aanvraag,
+  bijlagen: Bijlage[],
+  opties: { nu?: Date } = {},
+): Mail {
+  const agenda = agendaBijlage(aanvraag, opties.nu ?? new Date());
   const grote = isGroteKlus(aanvraag);
   const onderwerp = `${grote ? "[GROTE KLUS] " : ""}Offerteaanvraag ${categorieNaam(aanvraag)} - ${enkeleRegel(aanvraag.naam)}`;
 
   const intro = grote
     ? "Nieuwe offerteaanvraag via de website. Dit is een grote klus."
     : "Nieuwe offerteaanvraag via de website.";
+
+  const bijlageRegels: Regel[] = [
+    ...bijlagen.map((bijlage, index) => ({
+      label: `Bestand ${index + 1}`,
+      waarde: `${bijlage.naam} (${grootte(bijlage.inhoud.byteLength)})`,
+    })),
+    ...(agenda === undefined
+      ? []
+      : [
+          {
+            label: "Agendabestand",
+            waarde: `${agenda.naam} (open het om het afspraakverzoek voorlopig in je agenda te zetten)`,
+          },
+        ]),
+  ];
 
   const blokken: Blok[] = [
     {
@@ -184,12 +220,9 @@ export function maakInterneMail(aanvraag: Aanvraag, bijlagen: Bijlage[]): Mail {
     {
       kop: "Bijlagen",
       regels:
-        bijlagen.length === 0
+        bijlageRegels.length === 0
           ? [{ label: "Bijlagen", waarde: "geen" }]
-          : bijlagen.map((bijlage, index) => ({
-              label: `Bestand ${index + 1}`,
-              waarde: `${bijlage.naam} (${grootte(bijlage.inhoud.byteLength)})`,
-            })),
+          : bijlageRegels,
     },
   ];
 
@@ -218,14 +251,16 @@ export function maakInterneMail(aanvraag: Aanvraag, bijlagen: Bijlage[]): Mail {
     onderwerp,
     tekst,
     html,
-    bijlagen,
+    bijlagen: agenda === undefined ? bijlagen : [...bijlagen, agenda],
   };
 }
 
 /**
  * De bevestiging voor de klant, met een samenvatting van de aanvraag. De vrije
  * toelichting staat er bewust niet in: zo kan niemand het formulier gebruiken
- * om eigen tekst naar het adres van een ander te laten mailen.
+ * om eigen tekst naar het adres van een ander te laten mailen. Een
+ * agendabestand komt er ook niet bij: de afspraak is pas een verzoek tot SignUp
+ * die persoonlijk bevestigt (docs/processen.md).
  */
 export function maakBevestigingsMail(aanvraag: Aanvraag): Mail {
   const aanhef = `Beste ${aanvraag.naam},`;

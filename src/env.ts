@@ -21,6 +21,23 @@ export const envSchema = z.object({
     .default("production"),
   // Geheim waarmee Sanity de webhook naar /api/revalidate ondertekent.
   SANITY_WEBHOOK_SECRET: z.string().min(16).optional(),
+  // Mail via Resend. Zonder deze twee waarden logt de site de mails alleen.
+  RESEND_API_KEY: z
+    .string()
+    .trim()
+    .regex(
+      /^re_[A-Za-z0-9_]+$/,
+      "Begint met re_, gevolgd door letters, cijfers of _.",
+    )
+    .optional(),
+  MAIL_FROM: z
+    .string()
+    .trim()
+    .refine(
+      isAfzender,
+      "Vul een e-mailadres in, of een naam met adres: Naam <adres@domein.nl>.",
+    )
+    .optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;
@@ -37,6 +54,8 @@ export function parseEnv(source: Record<string, string | undefined>): Env {
     SANITY_PROJECT_ID: emptyToUndefined(source.SANITY_PROJECT_ID),
     SANITY_DATASET: emptyToUndefined(source.SANITY_DATASET),
     SANITY_WEBHOOK_SECRET: emptyToUndefined(source.SANITY_WEBHOOK_SECRET),
+    RESEND_API_KEY: emptyToUndefined(source.RESEND_API_KEY),
+    MAIL_FROM: emptyToUndefined(source.MAIL_FROM),
   });
 
   if (!result.success) {
@@ -51,6 +70,14 @@ export function parseEnv(source: Record<string, string | undefined>): Env {
 
 function emptyToUndefined(value: string | undefined): string | undefined {
   return value === undefined || value.trim() === "" ? undefined : value;
+}
+
+/** Een afzender: `adres@domein.tld` of `Naam <adres@domein.tld>`. */
+function isAfzender(waarde: string): boolean {
+  const metNaam = /^([^<>]*[^\s<>])\s*<([^<>]+)>$/.exec(waarde);
+  if (metNaam && /\p{Cc}/u.test(metNaam[1] ?? "")) return false;
+  const adres = metNaam ? metNaam[2] : waarde;
+  return z.email().safeParse(adres).success;
 }
 
 /** Validated environment, parsed once at startup. */

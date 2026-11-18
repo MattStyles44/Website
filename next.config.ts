@@ -14,6 +14,14 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
+  experimental: {
+    serverActions: {
+      // Het offerteformulier mag samen 20 MiB aan bestanden meesturen
+      // (src/lib/offerte/uploads.ts). De limiet geldt voor het hele verzoek,
+      // dus met ruimte voor de velden en de multipart-overhead.
+      bodySizeLimit: "21mb",
+    },
+  },
   turbopack: {
     rules: {
       "*.css": {
