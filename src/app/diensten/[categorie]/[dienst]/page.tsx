@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Container } from "@/components/container";
+import { JsonLdScript } from "@/components/json-ld";
 import { Kruimelpad } from "@/components/kruimelpad";
 import { OfferteCta } from "@/components/offerte-cta";
 import { RijkeTekst } from "@/components/rijke-tekst";
@@ -13,7 +14,14 @@ import {
   dienstPad,
   paginas,
 } from "@/content/paginas";
+import { env } from "@/env";
 import { haalDienstTekst } from "@/lib/cms";
+import {
+  dienstJsonLd,
+  kruimelpadJsonLd,
+  veelgesteldeVragenJsonLd,
+  type JsonLd,
+} from "@/lib/seo/json-ld";
 
 interface DienstPageProps {
   params: Promise<{ categorie: string; dienst: string }>;
@@ -50,16 +58,24 @@ export default async function DienstPage({ params }: DienstPageProps) {
     (andere) => andere.slug !== dienst.slug,
   );
 
+  const pad = dienstPad(categorie.slug, dienst.slug);
+  const kruimels = [
+    { label: "Home", href: "/" },
+    { label: paginas.diensten.titel, href: paginas.diensten.pad },
+    { label: categorie.naam, href: categoriePad(categorie.slug) },
+    { label: dienst.naam },
+  ];
+  const vragen = veelgesteldeVragenJsonLd(tekst.vragen);
+  const gegevens: JsonLd[] = [
+    dienstJsonLd(categorie, dienst, tekst.intro, pad, env.APP_URL),
+    kruimelpadJsonLd(kruimels, pad, env.APP_URL),
+    ...(vragen ? [vragen] : []),
+  ];
+
   return (
     <Container>
-      <Kruimelpad
-        items={[
-          { label: "Home", href: "/" },
-          { label: paginas.diensten.titel, href: paginas.diensten.pad },
-          { label: categorie.naam, href: categoriePad(categorie.slug) },
-          { label: dienst.naam },
-        ]}
-      />
+      <JsonLdScript data={gegevens} />
+      <Kruimelpad items={kruimels} />
 
       <header className="flex flex-col gap-2">
         <h1 className="text-3xl font-semibold">{dienst.naam}</h1>

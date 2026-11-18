@@ -82,6 +82,27 @@ describe("metadata", () => {
     );
   });
 
+  it("geeft elke pagina eigen Open Graph-gegevens met de vaste velden", () => {
+    const voorbeelden = [
+      [paginaMetadata(paginas.contact), paginas.contact.pad],
+      [categorieMetadata("gevelreclame"), "/diensten/gevelreclame"],
+      [
+        dienstMetadata("voertuigreclame", "carwrapping"),
+        "/diensten/voertuigreclame/carwrapping",
+      ],
+    ] as const;
+    for (const [meta, pad] of voorbeelden) {
+      expect(meta.openGraph, pad).toMatchObject({
+        locale: "nl_NL",
+        siteName: "SignUp Reclame",
+        type: "website",
+        url: pad,
+        description: meta.description,
+      });
+      expect(meta.openGraph?.title, pad).toBeTruthy();
+    }
+  });
+
   it("geeft lege metadata voor onbekende of verkeerd gecombineerde slugs", () => {
     expect(categorieMetadata("bestaat-niet")).toEqual({});
     expect(dienstMetadata("interieur", "autobelettering")).toEqual({});

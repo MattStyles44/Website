@@ -17,6 +17,27 @@ export const site = {
   materialen: ["Oracal 751C", "3M 2080", "Avery Dennison SW900"],
 } as const;
 
+/** Provincies waar SignUp werkt (docs/brief.md), voor zoekmachines. */
+export const werkgebied = ["Groningen", "Friesland", "Drenthe"] as const;
+
+export interface Adres {
+  straat: string;
+  postcode: string;
+  plaats: string;
+}
+
+/**
+ * Vestigingsadres (werkplaats), openbaar in de gestructureerde gegevens.
+ * Aangeleverd door SignUp op 18 november 2026; houd het gelijk aan het
+ * Google Bedrijfsprofiel. Zonder adres beschrijven we SignUp als organisatie
+ * met een werkgebied in plaats van als lokaal bedrijf.
+ */
+export const vestiging: Adres | undefined = {
+  straat: "Koldingweg 9",
+  postcode: "9723 HL",
+  plaats: "Groningen",
+};
+
 /** De drie redenen om voor SignUp te kiezen (docs/brief.md). */
 export const onderscheidend = [
   {
