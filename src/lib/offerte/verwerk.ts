@@ -73,7 +73,9 @@ export async function verwerkAanvraag(
   // 4. Eerst de aanvraag naar SignUp, daarna de bevestiging naar de klant.
   const bijlagen = gekozenBestanden(invoer.bestanden).map(alsBijlage);
   try {
-    await deps.transport.verstuur(maakInterneMail(aanvraag.aanvraag, bijlagen));
+    await deps.transport.verstuur(
+      maakInterneMail(aanvraag.aanvraag, bijlagen, { nu: deps.nu }),
+    );
   } catch (fout) {
     console.error("Offerteaanvraag: interne mail niet verstuurd.", fout);
     return { status: "fout", bericht: berichten.nietVerstuurd };

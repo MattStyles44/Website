@@ -166,7 +166,8 @@ describe("transports", () => {
     expect(info).toHaveBeenCalledTimes(1);
     const regel = String(info.mock.calls[0]?.[0]);
     expect(regel).toContain(site.email);
-    expect(regel).toContain("1 bijlage");
+    // Het bestand van de klant plus het agendabestand bij het afspraakverzoek.
+    expect(regel).toContain("2 bijlagen");
     expect(regel).not.toMatch(/\n/);
   });
 
