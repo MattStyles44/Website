@@ -19,12 +19,14 @@ Bron: interview fase 0, ronde 3 (17 november 2026), plus een DNS-check van `sign
 
 Het formulier begint met de keuze van de dienst; daarna verschijnen alleen de velden die erbij horen.
 
-| Dienstgroep                       | Velden                                                                                                                                    |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Voertuigen (belettering, carwrap) | Merk, model, bouwjaar, lengte/hoogte-variant (bijv. L1H1), aantal voertuigen, lakkleur                                                    |
-| Gevel- en lichtreclame            | Globale afmetingen (B × H), gewenste uitvoering (lichtbak, 3D-letters, gevelbord), ondergrond, montagehoogte, overzichtsfoto van de gevel |
-| Interieur en wandbekleding        | Wandmaten (B × H), type ondergrond, eventueel foto's                                                                                      |
-| Altijd                            | Naam, bedrijfsnaam (optioneel), e-mail, telefoon, plaats, toelichting, upload (EPS, AI, PDF, JPG, PNG)                                    |
+| Dienstgroep                                                 | Velden                                                                                                                                    |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Voertuigreclame & carwrapping                               | Merk, model, bouwjaar, lengte/hoogte-variant (bijv. L1H1), aantal voertuigen, lakkleur                                                    |
+| Gevelreclame & lichtreclame; buitenreclame & bewegwijzering | Globale afmetingen (B × H), gewenste uitvoering (lichtbak, 3D-letters, gevelbord), ondergrond, montagehoogte, overzichtsfoto van de gevel |
+| Interieurdecoratie & wandbekleding                          | Wandmaten (B × H), type ondergrond, eventueel foto's                                                                                      |
+| Raamfolies & glasdecoratie                                  | Nog te bepalen in fase 6                                                                                                                  |
+| Ontwerp, DTP & maatwerk                                     | Alleen de algemene velden                                                                                                                 |
+| Altijd                                                      | Naam, bedrijfsnaam (optioneel), e-mail, telefoon, plaats, toelichting, upload (EPS, AI, PDF, JPG, PNG)                                    |
 
 **Hulp bij aanleveren** (neemt de drempel "gedoe met bestanden" weg): bij het uploadveld staat dat elk bestand welkom is, en dat SignUp controleert of het geschikt is of het logo zo nodig opnieuw opmaakt.
 
@@ -47,17 +49,9 @@ Het formulier begint met de keuze van de dienst; daarna verschijnen alleen de ve
 - **CRM:** geen. Aanvragen komen per e-mail binnen.
 - **Agenda:** Apple Agenda (iCloud).
 
-## Prijzen (richtlijnen, exclusief btw)
+## Prijzen
 
-| Dienst                   | Vanaf       |
-| ------------------------ | ----------- |
-| Autobelettering (basis)  | € 250       |
-| Reclamebord, klein       | € 65        |
-| Gevelbord (gevelformaat) | € 320       |
-| Naadloos fotobehang      | € 35 per m² |
-| Full carwrap             | € 1.650     |
-
-**Let op:** prijzen die zich (ook) op particulieren richten, moeten in Nederland **inclusief btw** getoond worden. Dat geldt in elk geval voor carwrap. Voorstel: toon zakelijke prijzen excl. btw en prijzen voor particulieren incl. btw, of toon beide. Laat dit bevestigen door je boekhouder.
+**Op de site staan geen prijzen.** Alles is maatwerk; elke aanvraag krijgt een vrijblijvende offerte op maat (besluit 18 november 2026). De eerder genoemde vanaf-prijzen zijn alleen interne richtlijnen en komen niet op de site.
 
 ## Materialen en garantie
 

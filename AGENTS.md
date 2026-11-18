@@ -57,7 +57,7 @@ Een taak is pas af als deze vijf checks slagen: `lint`, `typecheck`, `format:che
 
 - Nederlands, de klant aanspreken met **je/jij**.
 - Vakkundig, nuchter en toegankelijk: korte zinnen, concreet, geen marketingpraat (zie `docs/merk.md`).
-- Prijzen alleen uit `docs/processen.md`; geen prijzen verzinnen.
+- Geen prijzen op de site: alles is maatwerk (zie `docs/processen.md`).
 
 ## Structuur
 

@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 
+import { nextRedirects } from "./src/content/redirects";
 // Validate environment variables at startup (dev, build and start).
 import "./src/env";
 
@@ -20,6 +21,10 @@ const nextConfig: NextConfig = {
         as: "*.css",
       },
     },
+  },
+  // Oude URL's van de WordPress-site naar de nieuwe pagina's (308 permanent).
+  async redirects() {
+    return nextRedirects();
   },
   async headers() {
     return [

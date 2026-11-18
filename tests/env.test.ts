@@ -6,14 +6,14 @@ describe("parseEnv", () => {
   it("applies defaults when variables are missing", () => {
     expect(parseEnv({})).toEqual({
       NODE_ENV: "development",
-      APP_NAME: "Next.js Foundation",
+      APP_NAME: "SignUp Reclame",
       APP_URL: "http://localhost:3000",
     });
   });
 
   it("treats empty strings as missing", () => {
     expect(parseEnv({ APP_NAME: "  ", APP_URL: "" }).APP_NAME).toBe(
-      "Next.js Foundation",
+      "SignUp Reclame",
     );
   });
 
