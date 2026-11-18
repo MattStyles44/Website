@@ -1,3 +1,5 @@
+import { notFound } from "next/navigation";
+
 import { categorieen, getCategorie } from "@/content/diensten";
 import { site } from "@/content/site";
 import {
@@ -21,8 +23,10 @@ export default async function Deelafbeelding({
 }) {
   const { categorie: slug } = await params;
   const categorie = getCategorie(slug);
+  // Net als de pagina: een onbekende categorie is een 404, geen afbeelding.
+  if (!categorie) notFound();
   return maakDeelafbeelding({
-    titel: categorie?.naam ?? site.slogan,
+    titel: categorie.naam,
     ondertitel: "Op maat, met een vrijblijvende offerte",
   });
 }

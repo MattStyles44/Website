@@ -8,6 +8,7 @@ import {
   type Categorie,
 } from "@/content/diensten";
 import { site } from "@/content/site";
+import { standaardDeelafbeelding } from "@/lib/seo/standaard-deelafbeelding";
 
 /**
  * Alle vaste pagina's van de site. Eén bron voor metadata, sitemap,
@@ -110,7 +111,12 @@ export function paginaMetadata(pagina: Pagina): Metadata {
     title: pagina.pad === "/" ? { absolute: pagina.titel } : pagina.titel,
     description: pagina.omschrijving,
     alternates: { canonical: pagina.pad },
-    openGraph: openGraph(pagina.titel, pagina.omschrijving, pagina.pad),
+    openGraph: {
+      ...openGraph(pagina.titel, pagina.omschrijving, pagina.pad),
+      // Eigen `openGraph` vervangt ook de afbeelding van app/opengraph-image.tsx.
+      // Alleen de homepage (dezelfde map) krijgt die nog vanzelf.
+      ...(pagina.pad === "/" ? {} : { images: [standaardDeelafbeelding] }),
+    },
   };
 }
 

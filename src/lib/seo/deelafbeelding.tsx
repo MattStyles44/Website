@@ -2,9 +2,9 @@ import { ImageResponse } from "next/og";
 
 import { merkKleuren } from "@/content/merk";
 import { site } from "@/content/site";
+import { deelafbeeldingFormaat } from "@/lib/seo/standaard-deelafbeelding";
 
-/** Standaardformaat voor Open Graph-afbeeldingen (Facebook, LinkedIn, WhatsApp). */
-export const deelafbeeldingFormaat = { width: 1200, height: 630 } as const;
+export { deelafbeeldingFormaat };
 
 /**
  * Tijdelijke deelafbeelding: merkblauw vlak met de naam van de pagina.
