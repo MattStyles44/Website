@@ -1,0 +1,7 @@
+# Afhankelijkheden en build van de Studio
+/node_modules
+/dist
+/.sanity
+
+# Gegenereerd door `npm run seed`
+/seed/seed.ndjson

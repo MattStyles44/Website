@@ -1,0 +1,30 @@
+{
+  "name": "signup-studio",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Sanity Studio: beheeromgeving voor de teksten en projecten van de SignUp-website.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "typecheck": "tsc --noEmit",
+    "seed": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON seed/maak-seed.ts",
+    "seed:import": "sanity dataset import seed/seed.ndjson --dataset production --missing"
+  },
+  "dependencies": {
+    "@sanity/locale-nl-nl": "1.1.40",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "sanity": "6.24.0",
+    "styled-components": "6.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "@types/react": "^19",
+    "typescript": "^5"
+  }
+}
