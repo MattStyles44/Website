@@ -238,6 +238,16 @@ describe("pagina's", () => {
     expect(markup).toContain(`${site.ervaring} vakmanschap`);
   });
 
+  it("toont de teamfoto in het openingsvlak van de homepage", async () => {
+    const markup = await render(Home);
+    const foto = markup.match(/<img\b[^>]*team-etalage[^>]*>/)?.[0] ?? "";
+    expect(foto, "teamfoto").not.toBe("");
+    expect(foto).toMatch(/\salt="Het team van SignUp Reclame[^"]+"/);
+    expect(foto).toMatch(/\swidth="1200"/);
+    expect(foto).toMatch(/\sheight="1120"/);
+    expect(foto).toMatch(/\ssizes="/);
+  });
+
   it("laat de projectensectie op de homepage weg zonder uitgelichte projecten", async () => {
     cms.projecten = [project("een", { uitgelicht: false })];
     const markup = await render(Home);

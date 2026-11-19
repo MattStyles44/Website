@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 
-import { Kleurvlakken } from "@/components/kleurvlakken";
 import { OfferteCta } from "@/components/offerte-cta";
 import { Accent, SectieKop } from "@/components/pagina-kop";
 import { PijlPictogram } from "@/components/pictogrammen";
@@ -62,8 +62,16 @@ export default async function Home() {
               </Knop>
             </div>
           </div>
-          <div className="relative pt-4 lg:col-span-5 lg:pt-0">
-            <Kleurvlakken className="h-36 sm:h-80 lg:h-[30rem]" />
+          <div className="relative pt-6 lg:col-span-5 lg:pt-0">
+            <Image
+              src="/fotos/team-etalage.jpg"
+              alt="Het team van SignUp Reclame bij een etalage met grote zwart-witte raamfolie"
+              width={1200}
+              height={1120}
+              sizes="(min-width: 1024px) 40vw, 100vw"
+              preload
+              className="h-auto w-full rounded-kaart bg-vlak"
+            />
             <div className="absolute top-0 right-3 sm:right-8 lg:-top-10 lg:-right-4">
               <Sticker>{site.ervaring} vakmanschap</Sticker>
             </div>
