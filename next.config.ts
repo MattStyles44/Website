@@ -14,6 +14,18 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
+  images: {
+    // Foto's van projecten en diensten komen van het CDN van Sanity
+    // (src/lib/cms/bron.ts laat alleen die adressen door).
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cdn.sanity.io",
+        port: "",
+        pathname: "/images/**",
+      },
+    ],
+  },
   experimental: {
     serverActions: {
       // Het offerteformulier mag samen 20 MiB aan bestanden meesturen

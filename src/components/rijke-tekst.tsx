@@ -39,16 +39,34 @@ function linkDoel(
     : undefined;
 }
 
-/** Weergave van rijke tekst uit Sanity. Vormgeving volgt in de interfacefase. */
+/** Links in lopende tekst: merkblauw en onderstreept, zodat ze opvallen. */
+const linkKlassen =
+  "font-medium text-blauw underline decoration-2 underline-offset-4 hover:text-navy";
+
+/** Weergave van rijke tekst uit Sanity: rustige alinea's van ongeveer 65 tekens. */
 const componenten: PortableTextComponents = {
   block: {
-    normal: ({ children }) => <p>{children}</p>,
-    h2: ({ children }) => <h2 className="text-xl font-semibold">{children}</h2>,
-    h3: ({ children }) => <h3 className="text-lg font-semibold">{children}</h3>,
+    normal: ({ children }) => <p className="max-w-[65ch]">{children}</p>,
+    h2: ({ children }) => (
+      <h2 className="mt-4 max-w-[30ch] text-3xl leading-kop tracking-tight sm:text-4xl">
+        {children}
+      </h2>
+    ),
+    h3: ({ children }) => (
+      <h3 className="mt-2 max-w-[40ch] text-2xl leading-kop">{children}</h3>
+    ),
   },
   list: {
-    bullet: ({ children }) => <ul className="list-disc pl-6">{children}</ul>,
-    number: ({ children }) => <ol className="list-decimal pl-6">{children}</ol>,
+    bullet: ({ children }) => (
+      <ul className="max-w-[65ch] list-disc space-y-2 pl-6 marker:text-blauw">
+        {children}
+      </ul>
+    ),
+    number: ({ children }) => (
+      <ol className="max-w-[65ch] list-decimal space-y-2 pl-6 marker:font-semibold marker:text-blauw">
+        {children}
+      </ol>
+    ),
   },
   marks: {
     link: ({ value, children }) => {
@@ -56,13 +74,13 @@ const componenten: PortableTextComponents = {
       if (!doel) return <>{children}</>;
       if (doel.soort === "intern") {
         return (
-          <Link href={doel.href} className="underline">
+          <Link href={doel.href} className={linkKlassen}>
             {children}
           </Link>
         );
       }
       return (
-        <a href={doel.href} className="underline" rel="noopener noreferrer">
+        <a href={doel.href} className={linkKlassen} rel="noopener noreferrer">
           {children}
         </a>
       );
@@ -73,7 +91,7 @@ const componenten: PortableTextComponents = {
 export function RijkeTekst({ value }: { value: Blok[] }) {
   if (value.length === 0) return null;
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-5">
       <PortableText value={value} components={componenten} />
     </div>
   );

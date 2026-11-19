@@ -38,6 +38,38 @@ function lijst<T extends z.ZodType>(item: T) {
     .transform((waarde) => waarde ?? []);
 }
 
+/** Een foto uit Sanity, zoals de site hem toont met `next/image`. */
+export type Foto = {
+  url: string;
+  alt: string;
+  breedte: number;
+  hoogte: number;
+};
+
+/** Alleen foto's van het CDN van Sanity, met een beschrijving en afmetingen. */
+const fotoSchema = z.object({
+  url: z.string().startsWith("https://cdn.sanity.io/"),
+  alt: z.string().trim().min(1),
+  breedte: z.number().positive(),
+  hoogte: z.number().positive(),
+});
+
+/**
+ * De foto's van een document. Een onvolledige foto valt weg, zonder dat de
+ * rest van het document onleesbaar wordt. Zonder foto's een lege lijst.
+ */
+const fotosVeld = z
+  .unknown()
+  .optional()
+  .transform((waarde): Foto[] =>
+    Array.isArray(waarde)
+      ? waarde.flatMap((item) => {
+          const foto = fotoSchema.safeParse(item);
+          return foto.success ? [foto.data] : [];
+        })
+      : [],
+  );
+
 const stapSchema = z.object({ titel: z.string(), tekst: z.string() });
 const vraagSchema = z.object({ vraag: z.string(), antwoord: z.string() });
 
@@ -53,6 +85,7 @@ const dienstDocSchema = z.object({
   werkwijze: lijst(stapSchema),
   vragen: lijst(vraagSchema),
   garantie: tekstVeld,
+  fotos: fotosVeld,
 });
 
 const projectDocSchema = z.object({
@@ -74,6 +107,7 @@ const projectDocSchema = z.object({
       .object({ categorie: z.string().nullish(), slug: z.string().nullish() })
       .nullable(),
   ),
+  fotos: fotosVeld,
 });
 
 export interface CategorieTekst {
@@ -88,6 +122,7 @@ export interface DienstTekst {
   werkwijze: Array<z.infer<typeof stapSchema>>;
   vragen: Array<z.infer<typeof vraagSchema>>;
   garantie?: string;
+  fotos: Foto[];
 }
 
 export interface ProjectKaart {
@@ -99,17 +134,23 @@ export interface ProjectKaart {
   samenvatting: string;
   uitgelicht: boolean;
   diensten: Array<{ categorie: string; slug: string; naam: string }>;
+  fotos: Foto[];
 }
 
 export const categorieQuery = `*[_type == "categorie" && slug == $slug][0]{intro, tekst}`;
 
+/** Elke foto met zijn adres, beschrijving en afmetingen. */
+const fotosProjectie = `fotos[]{alt, "url": asset->url, "breedte": asset->metadata.dimensions.width, "hoogte": asset->metadata.dimensions.height}`;
+
 export const dienstQuery = `*[_type == "dienst" && categorie == $categorie && slug == $slug][0]{
-  intro, tekst, voordelen, werkwijze[]{titel, tekst}, vragen[]{vraag, antwoord}, garantie
+  intro, tekst, voordelen, werkwijze[]{titel, tekst}, vragen[]{vraag, antwoord}, garantie,
+  ${fotosProjectie}
 }`;
 
 export const projectenQuery = `*[_type == "project" && defined(slug.current)] | order(datum desc, _createdAt desc){
   titel, "slug": slug.current, klant, plaats, datum, samenvatting, uitgelicht,
-  "diensten": diensten[]->{categorie, slug}
+  "diensten": diensten[]->{categorie, slug},
+  ${fotosProjectie}
 }`;
 
 export function maakContentBron(
@@ -148,6 +189,7 @@ export function maakContentBron(
         voordelen: [],
         werkwijze: [],
         vragen: [],
+        fotos: [],
       };
       if (!ophalen) return terugval;
 

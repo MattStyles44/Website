@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { Container } from "@/components/container";
 import { JsonLdScript } from "@/components/json-ld";
-import { Kruimelpad } from "@/components/kruimelpad";
 import { OfferteCta } from "@/components/offerte-cta";
+import { Intro, PaginaKop, SectieKop } from "@/components/pagina-kop";
 import { RijkeTekst } from "@/components/rijke-tekst";
+import { Kaart, Knop, Sectie } from "@/components/ui";
 import { categorieen, getCategorie } from "@/content/diensten";
+import { offerteKnop } from "@/content/navigatie";
 import {
   categorieMetadata,
   categoriePad,
@@ -52,9 +52,10 @@ export default async function CategoriePage({ params }: CategoriePageProps) {
     { label: paginas.diensten.titel, href: paginas.diensten.pad },
     { label: categorie.naam },
   ];
+  const offerteHref = `${offerteKnop.href}?${new URLSearchParams({ categorie: categorie.slug })}`;
 
   return (
-    <Container>
+    <>
       <JsonLdScript
         data={kruimelpadJsonLd(
           kruimels,
@@ -62,33 +63,38 @@ export default async function CategoriePage({ params }: CategoriePageProps) {
           env.APP_URL,
         )}
       />
-      <Kruimelpad items={kruimels} />
+      <PaginaKop titel={categorie.naam} kruimels={kruimels}>
+        {tekst.intro ? <Intro>{tekst.intro}</Intro> : null}
+        <p className="max-w-[60ch]">
+          Alles op maat, met een vrijblijvende offerte vooraf.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <Knop href={offerteHref}>{offerteKnop.label}</Knop>
+        </div>
+      </PaginaKop>
 
-      <header className="flex flex-col gap-2">
-        <h1 className="text-3xl font-semibold">{categorie.naam}</h1>
-        {tekst.intro && <p>{tekst.intro}</p>}
-        <p>Alles op maat, met een vrijblijvende offerte vooraf.</p>
-      </header>
-
-      <RijkeTekst value={tekst.tekst} />
-
-      <ul className="flex flex-col gap-4">
-        {categorie.diensten.map((dienst) => (
-          <li key={dienst.slug}>
-            <h2 className="text-xl font-semibold">
-              <Link
+      <Sectie>
+        {tekst.tekst.length > 0 ? (
+          <div className="max-w-3xl">
+            <RijkeTekst value={tekst.tekst} />
+          </div>
+        ) : null}
+        <SectieKop id="diensten-kop" titel="Kies een dienst" />
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {categorie.diensten.map((dienst) => (
+            <li key={dienst.slug}>
+              <Kaart
+                titel={dienst.naam}
                 href={dienstPad(categorie.slug, dienst.slug)}
-                className="underline"
               >
-                {dienst.naam}
-              </Link>
-            </h2>
-            <p>{dienst.omschrijving}</p>
-          </li>
-        ))}
-      </ul>
+                <p>{dienst.omschrijving}</p>
+              </Kaart>
+            </li>
+          ))}
+        </ul>
+      </Sectie>
 
       <OfferteCta categorie={categorie.slug} />
-    </Container>
+    </>
   );
 }

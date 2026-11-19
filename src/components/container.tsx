@@ -2,7 +2,10 @@ import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-/** Centreert pagina-inhoud. De <main> zelf staat in de root layout. */
+/**
+ * Centreert pagina-inhoud, met dezelfde breedte en ruimte als `Sectie`.
+ * De <main> zelf staat in de root layout.
+ */
 export function Container({
   children,
   className,
@@ -13,7 +16,7 @@ export function Container({
   return (
     <div
       className={cn(
-        "mx-auto flex w-full max-w-3xl flex-col gap-8 px-4 py-12",
+        "mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-14 sm:px-6 sm:py-20 lg:px-8",
         className,
       )}
     >
