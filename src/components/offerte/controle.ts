@@ -9,6 +9,7 @@ import {
   type Velden,
 } from "@/lib/offerte/aanvraag";
 import { isSpam } from "@/lib/offerte/spam";
+import { site } from "@/content/site";
 import {
   maxBestanden,
   maxTotaleGrootte,
@@ -21,7 +22,7 @@ export const ongeldigBericht =
 
 const megabyte = 1024 * 1024;
 
-/** De maximale totale grootte in MB (20). */
+/** De maximale totale grootte in MB (4). */
 export const maxMegabytes = maxTotaleGrootte / megabyte;
 
 /** Het `accept`-attribuut van het bestandsveld: `.eps,.ai,.pdf,…`. */
@@ -45,7 +46,7 @@ export const bestandstypen = (() => {
 })();
 
 /** De hulptekst bij het bestandsveld (docs/processen.md: hulp bij aanleveren). */
-export const bestandenHint = `Elk bestand is welkom: ${bestandstypen}, maximaal ${maxBestanden} bestanden en samen ${maxMegabytes} MB. We controleren of je bestand geschikt is en maken je logo zo nodig opnieuw op.`;
+export const bestandenHint = `Elk bestand is welkom: ${bestandstypen}, maximaal ${maxBestanden} bestanden en samen ${maxMegabytes} MB. Grotere bestanden mail je na je aanvraag naar ${site.email}. We controleren of je bestand geschikt is en maken je logo zo nodig opnieuw op.`;
 
 /** Wat het formulier van een gekozen bestand nodig heeft (een `File` past). */
 export interface GekozenBestand {
@@ -86,7 +87,7 @@ export function controleerBestanden(
   }
   const totaal = bestanden.reduce((som, bestand) => som + bestand.size, 0);
   if (totaal > maxTotaleGrootte) {
-    return `Je bestanden zijn samen ${formatGrootte(totaal)}. Dat is meer dan ${maxMegabytes} MB: kies minder of kleinere bestanden.`;
+    return `Je bestanden zijn samen ${formatGrootte(totaal)}. Dat is meer dan ${maxMegabytes} MB: kies minder of kleinere bestanden, of mail grote bestanden na je aanvraag naar ${site.email}.`;
   }
   return undefined;
 }

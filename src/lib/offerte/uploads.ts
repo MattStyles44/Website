@@ -3,6 +3,8 @@
  * upload van EPS, AI, PDF, JPG en PNG).
  */
 
+import { site } from "@/content/site";
+
 export interface Bestand {
   naam: string;
   type: string;
@@ -20,8 +22,11 @@ export const toegestaneExtensies = [
 
 export const maxBestanden = 10;
 
-/** Samen maximaal 20 MiB. */
-export const maxTotaleGrootte = 20 * 1024 * 1024;
+/**
+ * Samen maximaal 4 MiB. Vercel neemt per verzoek maximaal 4,5 MB aan, en het
+ * formulier stuurt de velden mee. Grotere bestanden kunnen per e-mail.
+ */
+export const maxTotaleGrootte = 4 * 1024 * 1024;
 
 /** Een leeg bestandsveld: het formulier stuurt dan een naamloos bestand van 0 bytes mee. */
 export function isLeegBestandsveld(bestand: Bestand): boolean {
@@ -74,7 +79,7 @@ export function valideerUploads(
   if (totaal > maxTotaleGrootte) {
     return {
       ok: false,
-      fout: "Je bestanden zijn samen groter dan 20 MB. Stuur minder of kleinere bestanden.",
+      fout: `Je bestanden zijn samen groter dan ${maxTotaleGrootte / (1024 * 1024)} MB. Stuur minder of kleinere bestanden, of mail grote bestanden na je aanvraag naar ${site.email}.`,
     };
   }
 

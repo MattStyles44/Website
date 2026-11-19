@@ -28,10 +28,11 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     serverActions: {
-      // Het offerteformulier mag samen 20 MiB aan bestanden meesturen
+      // Het offerteformulier mag samen 4 MiB aan bestanden meesturen
       // (src/lib/offerte/uploads.ts). De limiet geldt voor het hele verzoek,
-      // dus met ruimte voor de velden en de multipart-overhead.
-      bodySizeLimit: "21mb",
+      // dus met ruimte voor de velden en de multipart-overhead. Vercel neemt
+      // per verzoek maximaal 4,5 MB aan.
+      bodySizeLimit: "4.5mb",
     },
   },
   turbopack: {

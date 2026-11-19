@@ -119,11 +119,14 @@ describe("verwerkAanvraag met een afspraakverzoek", () => {
 });
 
 describe("uploadlimiet voor Server Actions", () => {
-  it("laat alle toegestane bestanden plus formulier-overhead door, maar niet veel meer", () => {
+  it("laat alle toegestane bestanden plus formulier-overhead door", () => {
     const limiet = nextConfig.experimental?.serverActions?.bodySizeLimit;
-    expect(limiet).toBe("21mb");
-    const bytes = 21 * 1024 * 1024;
+    expect(limiet).toBe("4.5mb");
+    const bytes = 4.5 * 1024 * 1024;
     expect(bytes).toBeGreaterThanOrEqual(maxTotaleGrootte + 64 * 1024);
-    expect(bytes).toBeLessThanOrEqual(32 * 1024 * 1024);
+  });
+
+  it("past met bestanden en overhead binnen de 4,5 MB per verzoek van Vercel", () => {
+    expect(maxTotaleGrootte + 64 * 1024).toBeLessThanOrEqual(4_500_000);
   });
 });
