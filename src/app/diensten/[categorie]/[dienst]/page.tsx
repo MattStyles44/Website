@@ -100,9 +100,15 @@ export default async function DienstPage({ params }: DienstPageProps) {
         <p className="max-w-[60ch]">
           Maatwerk: je krijgt vooraf een vrijblijvende offerte op maat.
         </p>
-        <div className="flex flex-wrap gap-3">
-          <Knop href={offerteHref}>{offerteKnop.label}</Knop>
-          <Knop href={site.whatsapp} variant="secundair">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <Knop href={offerteHref} className="w-full sm:w-auto">
+            {offerteKnop.label}
+          </Knop>
+          <Knop
+            href={site.whatsapp}
+            variant="secundair"
+            className="w-full sm:w-auto"
+          >
             <BerichtPictogram />
             Stuur een WhatsApp
           </Knop>
@@ -157,16 +163,16 @@ export default async function DienstPage({ params }: DienstPageProps) {
                   {tekst.werkwijze.map((stap, index) => (
                     <li
                       key={stap.titel}
-                      className="flex flex-col gap-3 rounded-kaart bg-vlak p-6 sm:p-8"
+                      className="grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-3 rounded-kaart bg-vlak p-5 sm:flex sm:flex-col sm:items-start sm:gap-3 sm:p-8"
                     >
                       <span
                         aria-hidden="true"
-                        className="font-display text-5xl leading-none font-bold text-blauw"
+                        className="font-display text-4xl leading-none font-bold text-blauw sm:text-5xl"
                       >
                         {index + 1}
                       </span>
                       <h3 className="text-2xl leading-kop">{stap.titel}</h3>
-                      <p>{stap.tekst}</p>
+                      <p className="col-span-2">{stap.tekst}</p>
                     </li>
                   ))}
                 </ol>

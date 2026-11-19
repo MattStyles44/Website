@@ -44,21 +44,26 @@ export default async function Home() {
               Al {site.ervaring} je specialist in autobelettering, carwrapping,
               gevelreclame en interieur in {site.regio}.
             </p>
-            <div className="flex flex-wrap gap-3">
-              <Knop href={offerteKnop.href} grootte="groot">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Knop
+                href={offerteKnop.href}
+                grootte="groot"
+                className="w-full sm:w-auto"
+              >
                 {offerteKnop.label}
               </Knop>
               <Knop
                 href={paginas.projecten.pad}
                 variant="secundair"
                 grootte="groot"
+                className="w-full sm:w-auto"
               >
                 Bekijk projecten
               </Knop>
             </div>
           </div>
-          <div className="relative pt-6 lg:col-span-5 lg:pt-0">
-            <Kleurvlakken className="h-52 sm:h-80 lg:h-[30rem]" />
+          <div className="relative pt-4 lg:col-span-5 lg:pt-0">
+            <Kleurvlakken className="h-36 sm:h-80 lg:h-[30rem]" />
             <div className="absolute top-0 right-3 sm:right-8 lg:-top-10 lg:-right-4">
               <Sticker>{site.ervaring} vakmanschap</Sticker>
             </div>

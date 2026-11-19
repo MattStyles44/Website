@@ -42,8 +42,13 @@ export function OfferteCta({
             {site.reactiebelofte}. Je spreekt direct met de vakman zelf.
           </p>
         </div>
-        <div className="flex flex-col items-start gap-4 lg:col-span-5 lg:items-end">
-          <Knop href={href} variant="licht" grootte="groot">
+        <div className="flex flex-col items-stretch gap-4 sm:items-start lg:col-span-5 lg:items-end">
+          <Knop
+            href={href}
+            variant="licht"
+            grootte="groot"
+            className="w-full sm:w-auto"
+          >
             {offerteKnop.label}
             <PijlPictogram />
           </Knop>

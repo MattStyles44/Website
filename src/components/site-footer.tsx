@@ -81,7 +81,7 @@ export function SiteFooter() {
             className="flex flex-col gap-4 lg:col-span-3"
           >
             <h2 className="text-xl">Menu</h2>
-            <ul className="flex flex-col">
+            <ul className="grid grid-cols-2 gap-x-6 lg:grid-cols-1">
               {footermenu.map((item) => (
                 <li key={item.href}>
                   <Link href={item.href} className={linkKlassen}>

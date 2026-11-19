@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { JsonLdScript } from "@/components/json-ld";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { SnelleActies } from "@/components/snelle-acties";
 import { basisOpenGraph, paginas } from "@/content/paginas";
 import { site, vestiging } from "@/content/site";
 import { env } from "@/env";
@@ -57,6 +58,7 @@ export default function RootLayout({
           {children}
         </main>
         <SiteFooter />
+        <SnelleActies />
       </body>
     </html>
   );

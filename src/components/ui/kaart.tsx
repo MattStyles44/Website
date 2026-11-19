@@ -17,7 +17,7 @@ export function Kaart({ titel, href, children, kopNiveau = "h3" }: KaartProps) {
   return (
     <article
       className={cn(
-        "relative flex h-full flex-col gap-3 rounded-kaart border-2 border-vlak bg-wit p-6 text-navy sm:p-8",
+        "relative flex h-full flex-col gap-3 rounded-kaart border-2 border-vlak bg-wit p-5 text-navy sm:p-8",
         href &&
           "group transition-colors duration-150 ease-out hover:border-blauw motion-reduce:transition-none",
       )}
