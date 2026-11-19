@@ -42,13 +42,14 @@ describe("server en browser", () => {
     }
   });
 
-  it("draait alleen het menu en de foutpagina in de browser", () => {
+  it("draait alleen het menu, het offerteformulier en de foutpagina in de browser", () => {
     const client = [
       ...tsxBestanden("src/app"),
       ...tsxBestanden("src/components"),
     ].filter((bestand) => isClient(lees(bestand)));
     expect(client.sort()).toEqual([
       "src/app/error.tsx",
+      "src/components/offerte/offerte-formulier.tsx",
       "src/components/site-menu.tsx",
     ]);
   });
