@@ -1,19 +1,27 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { Container } from "@/components/container";
 import { JsonLdScript } from "@/components/json-ld";
-import { Kruimelpad } from "@/components/kruimelpad";
 import { OfferteCta } from "@/components/offerte-cta";
+import { Intro, PaginaKop, SectieKop } from "@/components/pagina-kop";
+import {
+  BerichtPictogram,
+  PijlPictogram,
+  PlusPictogram,
+  VinkPictogram,
+} from "@/components/pictogrammen";
 import { RijkeTekst } from "@/components/rijke-tekst";
+import { Fotogalerij } from "@/components/sanity-foto";
+import { Kaart, Knop, Sectie } from "@/components/ui";
 import { alleDiensten, getCategorie, getDienst } from "@/content/diensten";
+import { offerteKnop } from "@/content/navigatie";
 import {
   categoriePad,
   dienstMetadata,
   dienstPad,
   paginas,
 } from "@/content/paginas";
+import { site } from "@/content/site";
 import { env } from "@/env";
 import { haalDienstTekst } from "@/lib/cms";
 import {
@@ -71,98 +79,176 @@ export default async function DienstPage({ params }: DienstPageProps) {
     kruimelpadJsonLd(kruimels, pad, env.APP_URL),
     ...(vragen ? [vragen] : []),
   ];
+  const offerteHref = `${offerteKnop.href}?${new URLSearchParams({
+    categorie: categorie.slug,
+    dienst: dienst.slug,
+  })}`;
+
+  const heeftInhoud =
+    tekst.fotos.length > 0 ||
+    tekst.tekst.length > 0 ||
+    tekst.voordelen.length > 0 ||
+    tekst.werkwijze.length > 0 ||
+    Boolean(tekst.garantie) ||
+    tekst.vragen.length > 0;
 
   return (
-    <Container>
+    <>
       <JsonLdScript data={gegevens} />
-      <Kruimelpad items={kruimels} />
+      <PaginaKop titel={dienst.naam} kruimels={kruimels}>
+        <Intro>{tekst.intro}</Intro>
+        <p className="max-w-[60ch]">
+          Maatwerk: je krijgt vooraf een vrijblijvende offerte op maat.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <Knop href={offerteHref}>{offerteKnop.label}</Knop>
+          <Knop href={site.whatsapp} variant="secundair">
+            <BerichtPictogram />
+            Stuur een WhatsApp
+          </Knop>
+        </div>
+      </PaginaKop>
 
-      <header className="flex flex-col gap-2">
-        <h1 className="text-3xl font-semibold">{dienst.naam}</h1>
-        <p>{tekst.intro}</p>
-        <p>Maatwerk: je krijgt vooraf een vrijblijvende offerte op maat.</p>
-      </header>
+      {heeftInhoud ? (
+        <Sectie>
+          <div className="flex flex-col gap-20 lg:gap-28">
+            {tekst.fotos.length > 0 ? (
+              <section
+                aria-labelledby="fotos-kop"
+                className="flex flex-col gap-8"
+              >
+                <SectieKop id="fotos-kop" titel="Foto's" />
+                <Fotogalerij fotos={tekst.fotos} />
+              </section>
+            ) : null}
 
-      <RijkeTekst value={tekst.tekst} />
+            {tekst.tekst.length > 0 ? (
+              <div className="max-w-3xl">
+                <RijkeTekst value={tekst.tekst} />
+              </div>
+            ) : null}
 
-      {tekst.voordelen.length > 0 && (
-        <section
-          aria-labelledby="voordelen-kop"
-          className="flex flex-col gap-2"
-        >
-          <h2 id="voordelen-kop" className="text-xl font-semibold">
-            Waarom SignUp
-          </h2>
-          <ul className="list-disc pl-6">
-            {tekst.voordelen.map((voordeel) => (
-              <li key={voordeel}>{voordeel}</li>
-            ))}
-          </ul>
-        </section>
-      )}
+            {tekst.voordelen.length > 0 ? (
+              <section
+                aria-labelledby="voordelen-kop"
+                className="flex flex-col gap-8"
+              >
+                <SectieKop id="voordelen-kop" titel="Waarom SignUp" />
+                <ul className="grid gap-x-8 gap-y-5 md:grid-cols-2">
+                  {tekst.voordelen.map((voordeel) => (
+                    <li key={voordeel} className="flex items-start gap-4">
+                      <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-blauw text-wit">
+                        <VinkPictogram />
+                      </span>
+                      <span className="pt-1 text-lg">{voordeel}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
 
-      {tekst.werkwijze.length > 0 && (
-        <section
-          aria-labelledby="werkwijze-kop"
-          className="flex flex-col gap-2"
-        >
-          <h2 id="werkwijze-kop" className="text-xl font-semibold">
-            Zo werken we
-          </h2>
-          <ol className="flex list-decimal flex-col gap-2 pl-6">
-            {tekst.werkwijze.map((stap) => (
-              <li key={stap.titel}>
-                <strong>{stap.titel}</strong>: {stap.tekst}
+            {tekst.werkwijze.length > 0 ? (
+              <section
+                aria-labelledby="werkwijze-kop"
+                className="flex flex-col gap-8"
+              >
+                <SectieKop id="werkwijze-kop" titel="Zo werken we" />
+                <ol className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  {tekst.werkwijze.map((stap, index) => (
+                    <li
+                      key={stap.titel}
+                      className="flex flex-col gap-3 rounded-kaart bg-vlak p-6 sm:p-8"
+                    >
+                      <span
+                        aria-hidden="true"
+                        className="font-display text-5xl leading-none font-bold text-blauw"
+                      >
+                        {index + 1}
+                      </span>
+                      <h3 className="text-2xl leading-kop">{stap.titel}</h3>
+                      <p>{stap.tekst}</p>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            ) : null}
+
+            {tekst.garantie ? (
+              <section
+                aria-labelledby="garantie-kop"
+                className="grid gap-6 rounded-kaart border-2 border-vlak p-6 sm:p-10 lg:grid-cols-12 lg:gap-8"
+              >
+                <h2
+                  id="garantie-kop"
+                  className="text-3xl leading-kop tracking-tight sm:text-4xl lg:col-span-4"
+                >
+                  Garantie
+                </h2>
+                <p className="max-w-[65ch] text-intro lg:col-span-8">
+                  {tekst.garantie}
+                </p>
+              </section>
+            ) : null}
+
+            {tekst.vragen.length > 0 ? (
+              <section
+                aria-labelledby="vragen-kop"
+                className="grid gap-8 lg:grid-cols-12"
+              >
+                <h2
+                  id="vragen-kop"
+                  className="text-3xl leading-kop tracking-tight sm:text-4xl lg:col-span-4 lg:text-5xl"
+                >
+                  Veelgestelde vragen
+                </h2>
+                <div className="flex flex-col border-t-2 border-vlak lg:col-span-8">
+                  {tekst.vragen.map((item) => (
+                    <details
+                      key={item.vraag}
+                      className="group border-b-2 border-vlak"
+                    >
+                      <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-4 font-display text-xl leading-kop font-bold hover:text-blauw [&::-webkit-details-marker]:hidden">
+                        {item.vraag}
+                        <PlusPictogram className="size-6 text-blauw transition-transform duration-150 ease-out group-open:rotate-45 motion-reduce:transition-none" />
+                      </summary>
+                      <p className="max-w-[65ch] pb-6">{item.antwoord}</p>
+                    </details>
+                  ))}
+                </div>
+              </section>
+            ) : null}
+          </div>
+        </Sectie>
+      ) : null}
+
+      {andereDiensten.length > 0 ? (
+        <Sectie toon={heeftInhoud ? "vlak" : "wit"} aria-labelledby="meer-kop">
+          <SectieKop
+            id="meer-kop"
+            titel="Andere diensten in deze categorie"
+            actie={
+              <Knop href={categoriePad(categorie.slug)} variant="tekst">
+                {categorie.naam}
+                <PijlPictogram />
+              </Knop>
+            }
+          />
+          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {andereDiensten.map((andere) => (
+              <li key={andere.slug}>
+                <Kaart
+                  titel={andere.naam}
+                  href={dienstPad(categorie.slug, andere.slug)}
+                >
+                  <p>{andere.omschrijving}</p>
+                </Kaart>
               </li>
             ))}
-          </ol>
-        </section>
-      )}
-
-      {tekst.garantie && (
-        <section aria-labelledby="garantie-kop" className="flex flex-col gap-2">
-          <h2 id="garantie-kop" className="text-xl font-semibold">
-            Garantie
-          </h2>
-          <p>{tekst.garantie}</p>
-        </section>
-      )}
-
-      {tekst.vragen.length > 0 && (
-        <section aria-labelledby="vragen-kop" className="flex flex-col gap-2">
-          <h2 id="vragen-kop" className="text-xl font-semibold">
-            Veelgestelde vragen
-          </h2>
-          <dl className="flex flex-col gap-3">
-            {tekst.vragen.map((item) => (
-              <div key={item.vraag}>
-                <dt className="font-semibold">{item.vraag}</dt>
-                <dd>{item.antwoord}</dd>
-              </div>
-            ))}
-          </dl>
-        </section>
-      )}
+          </ul>
+        </Sectie>
+      ) : null}
 
       <OfferteCta categorie={categorie.slug} dienst={dienst.slug} />
-
-      <section aria-labelledby="meer-kop" className="flex flex-col gap-2">
-        <h2 id="meer-kop" className="text-xl font-semibold">
-          Andere diensten in deze categorie
-        </h2>
-        <ul className="flex flex-col gap-1">
-          {andereDiensten.map((andere) => (
-            <li key={andere.slug}>
-              <Link
-                href={dienstPad(categorie.slug, andere.slug)}
-                className="underline"
-              >
-                {andere.naam}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-    </Container>
+    </>
   );
 }

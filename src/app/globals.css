@@ -61,6 +61,11 @@
     --kleur-focus: var(--color-blauw);
   }
 
+  /* Ruimte voor de vaste kop bij links naar een plek op de pagina. */
+  html {
+    scroll-padding-top: 6rem;
+  }
+
   body {
     background-color: var(--color-wit);
     color: var(--color-navy);
@@ -79,6 +84,8 @@
     font-weight: 700;
     line-height: var(--leading-kop);
     text-wrap: balance;
+    /* Lange samenstellingen breken af in plaats van uit het scherm te lopen. */
+    overflow-wrap: break-word;
   }
 
   :focus-visible {
