@@ -1,68 +1,70 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
-import { Container } from "@/components/container";
+import { Kleurvlakken } from "@/components/kleurvlakken";
 import { OfferteCta } from "@/components/offerte-cta";
-import { dienstPad, paginaMetadata, paginas } from "@/content/paginas";
+import { Intro, PaginaKop } from "@/components/pagina-kop";
+import { ProjectBlok } from "@/components/project";
+import { Knop, Sectie } from "@/components/ui";
+import { offerteKnop } from "@/content/navigatie";
+import { paginaMetadata, paginas } from "@/content/paginas";
 import { haalProjecten } from "@/lib/cms";
+import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = paginaMetadata(paginas.projecten);
 
-const datumNotatie = new Intl.DateTimeFormat("nl-NL", {
-  month: "long",
-  year: "numeric",
-  timeZone: "Europe/Amsterdam",
-});
-
-// De projecten komen uit Sanity (fase 4). Foto's en vormgeving volgen in de interfacefase.
+// De projecten komen uit Sanity, nieuwste eerst (zie projectenQuery).
 export default async function ProjectenPage() {
   const projecten = await haalProjecten();
 
   return (
-    <Container>
-      <h1 className="text-3xl font-semibold">{paginas.projecten.titel}</h1>
+    <>
+      <PaginaKop titel={paginas.projecten.titel}>
+        <Intro>{paginas.projecten.omschrijving}</Intro>
+      </PaginaKop>
 
       {projecten.length === 0 ? (
-        <p>Hier komen binnenkort projecten met foto&apos;s van voor en na.</p>
+        <Sectie aria-labelledby="leeg-kop">
+          <div className="grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-8">
+            <div className="flex flex-col gap-6 lg:col-span-6">
+              <h2
+                id="leeg-kop"
+                className="text-3xl leading-kop tracking-tight sm:text-4xl lg:text-5xl"
+              >
+                Binnenkort te zien
+              </h2>
+              <p className="max-w-[50ch] text-intro">
+                Hier komen binnenkort projecten met foto&apos;s van voor en na.
+              </p>
+              <p className="max-w-[50ch]">
+                Benieuwd wat we voor jou kunnen maken? Bekijk de diensten, of
+                vraag meteen een vrijblijvende offerte aan.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <Knop href={offerteKnop.href}>{offerteKnop.label}</Knop>
+                <Knop href={paginas.diensten.pad} variant="secundair">
+                  Bekijk de diensten
+                </Knop>
+              </div>
+            </div>
+            <Kleurvlakken className="h-56 sm:h-72 lg:col-span-6 lg:h-96" />
+          </div>
+        </Sectie>
       ) : (
-        <ul className="flex flex-col gap-6">
-          {projecten.map((project) => (
-            <li key={project.slug} className="flex flex-col gap-1">
-              <h2 className="text-xl font-semibold">{project.titel}</h2>
-              {(project.plaats || project.datum) && (
-                <p>
-                  {[
-                    project.plaats,
-                    project.datum
-                      ? datumNotatie.format(new Date(project.datum))
-                      : undefined,
-                  ]
-                    .filter(Boolean)
-                    .join(", ")}
-                </p>
-              )}
-              <p>{project.samenvatting}</p>
-              {project.diensten.length > 0 && (
-                <p>
-                  {project.diensten.map((dienst, index) => (
-                    <span key={`${dienst.categorie}/${dienst.slug}`}>
-                      {index > 0 && ", "}
-                      <Link
-                        href={dienstPad(dienst.categorie, dienst.slug)}
-                        className="underline"
-                      >
-                        {dienst.naam}
-                      </Link>
-                    </span>
-                  ))}
-                </p>
-              )}
-            </li>
-          ))}
-        </ul>
+        <Sectie>
+          <ul className="grid gap-x-8 gap-y-16 md:grid-cols-2 lg:gap-y-24">
+            {projecten.map((project, index) => (
+              <li
+                key={project.slug}
+                className={cn(index === 0 && "md:col-span-2")}
+              >
+                <ProjectBlok project={project} groot={index === 0} />
+              </li>
+            ))}
+          </ul>
+        </Sectie>
       )}
 
       <OfferteCta />
-    </Container>
+    </>
   );
 }

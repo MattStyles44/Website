@@ -6,7 +6,13 @@ import { maakContentBron } from "./bron";
 import { sanityClient } from "./client";
 import { cmsTag } from "./tag";
 
-export type { Blok, CategorieTekst, DienstTekst, ProjectKaart } from "./bron";
+export type {
+  Blok,
+  CategorieTekst,
+  DienstTekst,
+  Foto,
+  ProjectKaart,
+} from "./bron";
 
 function bron() {
   const client = sanityClient();
