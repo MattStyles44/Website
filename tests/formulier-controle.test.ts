@@ -89,7 +89,8 @@ describe("controleerBestanden", () => {
       bestand("a.pdf", maxTotaleGrootte),
       bestand("b.pdf", 1),
     ]);
-    expect(melding).toMatch(/meer dan 20 MB/);
+    expect(melding).toMatch(/meer dan 4 MB/);
+    expect(melding).toContain("info@sign-up.nl");
   });
 
   it("meldt een bestandstype met dezelfde tekst als de server", () => {

@@ -6,6 +6,7 @@ import {
   valideerUploads,
   type Bestand,
 } from "@/lib/offerte/uploads";
+import { site } from "@/content/site";
 
 const bestand = (naam: string, bytes = 1): Bestand => ({
   naam,
@@ -33,11 +34,20 @@ describe("valideerUploads", () => {
     expect(valideerUploads([...tien, leegVeld, leegVeld]).ok).toBe(true);
   });
 
-  it("staat precies 20 MiB samen toe, en geen byte meer", () => {
+  it("staat precies 4 MiB samen toe, en geen byte meer", () => {
     expect(valideerUploads([bestand("a.pdf", maxTotaleGrootte)]).ok).toBe(true);
     expect(valideerUploads([bestand("a.pdf", maxTotaleGrootte + 1)]).ok).toBe(
       false,
     );
+  });
+
+  it("wijst bij te grote bestanden de weg naar e-mail", () => {
+    const resultaat = valideerUploads([bestand("a.pdf", maxTotaleGrootte + 1)]);
+    expect(resultaat.ok).toBe(false);
+    if (!resultaat.ok) {
+      expect(resultaat.fout).toContain("4 MB");
+      expect(resultaat.fout).toContain(site.email);
+    }
   });
 
   it("geeft een Nederlandse melding die de klant met je aanspreekt", () => {
