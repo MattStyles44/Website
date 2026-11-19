@@ -68,8 +68,10 @@ export default async function CategoriePage({ params }: CategoriePageProps) {
         <p className="max-w-[60ch]">
           Alles op maat, met een vrijblijvende offerte vooraf.
         </p>
-        <div className="flex flex-wrap gap-3">
-          <Knop href={offerteHref}>{offerteKnop.label}</Knop>
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <Knop href={offerteHref} className="w-full sm:w-auto">
+            {offerteKnop.label}
+          </Knop>
         </div>
       </PaginaKop>
 

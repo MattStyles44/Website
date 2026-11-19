@@ -42,7 +42,7 @@ describe("server en browser", () => {
     }
   });
 
-  it("draait alleen het menu, het offerteformulier en de foutpagina in de browser", () => {
+  it("draait alleen het menu, de snelle acties, het offerteformulier en de foutpagina in de browser", () => {
     const client = [
       ...tsxBestanden("src/app"),
       ...tsxBestanden("src/components"),
@@ -51,6 +51,7 @@ describe("server en browser", () => {
       "src/app/error.tsx",
       "src/components/offerte/offerte-formulier.tsx",
       "src/components/site-menu.tsx",
+      "src/components/snelle-acties.tsx",
     ]);
   });
 
