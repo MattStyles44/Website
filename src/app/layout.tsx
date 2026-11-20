@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Barlow, Barlow_Semi_Condensed } from "next/font/google";
-import type { ReactNode } from "react";
+import { type ReactNode, ViewTransition } from "react";
 
 import { JsonLdScript } from "@/components/json-ld";
 import { SiteFooter } from "@/components/site-footer";
@@ -55,7 +55,8 @@ export default function RootLayout({
         />
         <SiteHeader />
         <main id="inhoud" className="flex flex-1 flex-col">
-          {children}
+          {/* Bij navigeren vloeit de inhoud kort over (zie globals.css). */}
+          <ViewTransition>{children}</ViewTransition>
         </main>
         <SiteFooter />
         <SnelleActies />

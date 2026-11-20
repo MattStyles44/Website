@@ -46,7 +46,10 @@ export function Intro({ children }: { children: ReactNode }) {
   return <p className="max-w-[60ch] text-intro">{children}</p>;
 }
 
-/** Kop van een sectie (`<h2>`), met eventueel een korte tekst en een actie rechts. */
+/**
+ * Kop van een sectie (`<h2>`), met eventueel een korte tekst en een actie rechts.
+ * Komt rustig in beeld bij scrollen (`onthul`); de paginakop met de `<h1>` niet.
+ */
 export function SectieKop({
   id,
   titel,
@@ -59,7 +62,7 @@ export function SectieKop({
   actie?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+    <div className="onthul flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
       <div className="flex max-w-3xl min-w-0 flex-col gap-4">
         <h2
           id={id}
