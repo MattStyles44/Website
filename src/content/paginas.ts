@@ -23,9 +23,8 @@ export interface Pagina {
 export const paginas = {
   home: {
     pad: "/",
-    titel: `${site.naam} | ${site.slogan}`,
-    omschrijving:
-      "Voertuigreclame, carwrapping, gevel- en lichtreclame, bewegwijzering en interieurdecoratie in Groningen en Noord-Nederland. 25 jaar vakmanschap.",
+    titel: `Belettering en reclame in Groningen | ${site.naam}`,
+    omschrijving: `Autobelettering, gevelreclame en raamfolie in Groningen en Noord-Nederland. A-merk folie, ${site.ervaring} vakmanschap. Vraag vrijblijvend een offerte aan.`,
   },
   diensten: {
     pad: "/diensten",
