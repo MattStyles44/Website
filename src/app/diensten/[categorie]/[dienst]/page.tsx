@@ -10,6 +10,7 @@ import {
   PlusPictogram,
   VinkPictogram,
 } from "@/components/pictogrammen";
+import { UitgelichteProjecten } from "@/components/project";
 import { RijkeTekst } from "@/components/rijke-tekst";
 import { Fotogalerij } from "@/components/sanity-foto";
 import { Kaart, Knop, Sectie } from "@/components/ui";
@@ -23,7 +24,8 @@ import {
 } from "@/content/paginas";
 import { site } from "@/content/site";
 import { env } from "@/env";
-import { haalDienstTekst } from "@/lib/cms";
+import { haalDienstTekst, haalProjecten } from "@/lib/cms";
+import { projectenMetDienst } from "@/lib/projecten";
 import {
   dienstJsonLd,
   kruimelpadJsonLd,
@@ -37,6 +39,13 @@ interface DienstPageProps {
 
 // Zie de toelichting bij de categoriepagina: vooraf gebouwd, mag blokkeren.
 export const instant = false;
+
+type Toon = "wit" | "vlak";
+
+/** De andere lichte toon, zodat witte en lichtblauwe vlakken elkaar afwisselen. */
+function wissel(toon: Toon): Toon {
+  return toon === "wit" ? "vlak" : "wit";
+}
 
 /** Alle combinaties van categorie en dienst (beide segmenten vanuit hier). */
 export function generateStaticParams() {
@@ -61,6 +70,12 @@ export default async function DienstPage({ params }: DienstPageProps) {
 
   const tekst = await haalDienstTekst(categorie.slug, dienst.slug);
   if (!tekst) notFound();
+
+  const recentWerk = projectenMetDienst(
+    await haalProjecten(),
+    categorie.slug,
+    dienst.slug,
+  );
 
   const andereDiensten = categorie.diensten.filter(
     (andere) => andere.slug !== dienst.slug,
@@ -91,6 +106,12 @@ export default async function DienstPage({ params }: DienstPageProps) {
     tekst.werkwijze.length > 0 ||
     Boolean(tekst.garantie) ||
     tekst.vragen.length > 0;
+
+  // Na de paginakop wisselen wit en lichtblauw elkaar af, beginnend met wit,
+  // welke secties er ook zijn: inhoud, recent werk en andere diensten.
+  const toonProjecten: Toon = heeftInhoud ? "vlak" : "wit";
+  const toonMeer: Toon =
+    recentWerk.length > 0 ? wissel(toonProjecten) : toonProjecten;
 
   return (
     <>
@@ -227,8 +248,24 @@ export default async function DienstPage({ params }: DienstPageProps) {
         </Sectie>
       ) : null}
 
+      {recentWerk.length > 0 ? (
+        <Sectie toon={toonProjecten} aria-labelledby="projecten-kop">
+          <SectieKop
+            id="projecten-kop"
+            titel="Recent werk"
+            actie={
+              <Knop href={paginas.projecten.pad} variant="tekst">
+                Alle projecten
+                <PijlPictogram />
+              </Knop>
+            }
+          />
+          <UitgelichteProjecten projecten={recentWerk} />
+        </Sectie>
+      ) : null}
+
       {andereDiensten.length > 0 ? (
-        <Sectie toon={heeftInhoud ? "vlak" : "wit"} aria-labelledby="meer-kop">
+        <Sectie toon={toonMeer} aria-labelledby="meer-kop">
           <SectieKop
             id="meer-kop"
             titel="Andere diensten in deze categorie"

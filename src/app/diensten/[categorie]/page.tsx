@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { JsonLdScript } from "@/components/json-ld";
 import { OfferteCta } from "@/components/offerte-cta";
 import { Intro, PaginaKop, SectieKop } from "@/components/pagina-kop";
+import { PijlPictogram } from "@/components/pictogrammen";
+import { UitgelichteProjecten } from "@/components/project";
 import { RijkeTekst } from "@/components/rijke-tekst";
 import { Kaart, Knop, Sectie } from "@/components/ui";
 import { categorieen, getCategorie } from "@/content/diensten";
@@ -15,7 +17,8 @@ import {
   paginas,
 } from "@/content/paginas";
 import { env } from "@/env";
-import { haalCategorieTekst } from "@/lib/cms";
+import { haalCategorieTekst, haalProjecten } from "@/lib/cms";
+import { projectenInCategorie } from "@/lib/projecten";
 import { kruimelpadJsonLd } from "@/lib/seo/json-ld";
 
 interface CategoriePageProps {
@@ -46,6 +49,11 @@ export default async function CategoriePage({ params }: CategoriePageProps) {
 
   const tekst = await haalCategorieTekst(categorie.slug);
   if (!tekst) notFound();
+
+  const recentWerk = projectenInCategorie(
+    await haalProjecten(),
+    categorie.slug,
+  );
 
   const kruimels = [
     { label: "Home", href: "/" },
@@ -95,6 +103,22 @@ export default async function CategoriePage({ params }: CategoriePageProps) {
           ))}
         </ul>
       </Sectie>
+
+      {recentWerk.length > 0 ? (
+        <Sectie toon="vlak" aria-labelledby="projecten-kop">
+          <SectieKop
+            id="projecten-kop"
+            titel="Recent werk"
+            actie={
+              <Knop href={paginas.projecten.pad} variant="tekst">
+                Alle projecten
+                <PijlPictogram />
+              </Knop>
+            }
+          />
+          <UitgelichteProjecten projecten={recentWerk} />
+        </Sectie>
+      ) : null}
 
       <OfferteCta categorie={categorie.slug} />
     </>
