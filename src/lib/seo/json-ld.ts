@@ -1,5 +1,6 @@
-import type { Categorie, Dienst } from "@/content/diensten";
-import { paginas } from "@/content/paginas";
+import { categorieen, type Categorie, type Dienst } from "@/content/diensten";
+import { teamfoto } from "@/content/home";
+import { categoriePad, paginas } from "@/content/paginas";
 import { site, werkgebied, type Adres } from "@/content/site";
 
 /**
@@ -29,6 +30,35 @@ const gebied = werkgebied.map((naam) => ({
   name: naam,
 }));
 
+/** Het logo in kleur, uit public/brand/. */
+const logoPad = "/brand/signup-logo.svg";
+
+/** Vakgebieden van SignUp, voor `knowsAbout`. */
+const vakgebieden = [
+  "Autobelettering",
+  "Carwrapping",
+  "Gevelreclame",
+  "Lichtreclame",
+  "Raamfolie",
+  "Bewegwijzering",
+] as const;
+
+/** Het aanbod: één aanbieding per categorie, in de volgorde van de site. */
+function aanbodJsonLd(basis: string) {
+  return {
+    "@type": "OfferCatalog",
+    name: paginas.diensten.titel,
+    itemListElement: categorieen.map((categorie) => ({
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
+        name: categorie.naam,
+        url: absoluteUrl(categoriePad(categorie.slug), basis),
+      },
+    })),
+  };
+}
+
 /**
  * SignUp als organisatie; met een vestigingsadres als lokaal bedrijf.
  * Geef `vestiging` uit src/content/site.ts mee, of undefined voor geen adres.
@@ -43,11 +73,15 @@ export function organisatieJsonLd(
     "@id": organisatieId(basis),
     name: site.naam,
     url: absoluteUrl("/", basis),
+    logo: absoluteUrl(logoPad, basis),
+    image: absoluteUrl(teamfoto.src, basis),
     slogan: site.slogan,
     description: paginas.home.omschrijving,
     telephone: site.telefoon.link.replace(/^tel:/, ""),
     email: site.email,
     areaServed: gebied,
+    knowsAbout: vakgebieden,
+    hasOfferCatalog: aanbodJsonLd(basis),
     ...(adres
       ? {
           address: {
