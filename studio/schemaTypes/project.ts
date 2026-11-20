@@ -1,6 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
-import { foto, rijkeTekst } from "./velden";
+import { foto, fotoBeschrijving, rijkeTekst } from "./velden";
 
 export const project = defineType({
   name: "project",
@@ -68,6 +68,15 @@ export const project = defineType({
       title: "Tekst",
       description: "De vraag van de klant, de oplossing en het resultaat.",
       of: [rijkeTekst],
+    }),
+    defineField({
+      name: "voorFoto",
+      type: "image",
+      title: "Foto vooraf",
+      description:
+        "Optioneel: de situatie vóór het werk. De site toont hem als Voor naast de eerste foto (Na).",
+      options: { hotspot: true },
+      fields: [fotoBeschrijving],
     }),
     defineField({
       name: "fotos",

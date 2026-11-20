@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 
 import type { Foto } from "@/lib/cms";
 import { cn } from "@/lib/utils";
@@ -6,15 +7,18 @@ import { cn } from "@/lib/utils";
 /**
  * Een foto uit Sanity via `next/image`, met de afmetingen en de beschrijving
  * uit Sanity. `sizes` vertelt de browser hoe breed de foto op de pagina staat.
+ * `style` is voor wat geen klasse kan zijn, zoals een verhouding uit Sanity.
  */
 export function SanityFoto({
   foto,
   sizes,
   className,
+  style,
 }: {
   foto: Foto;
   sizes: string;
   className?: string;
+  style?: CSSProperties;
 }) {
   return (
     <Image
@@ -24,6 +28,7 @@ export function SanityFoto({
       height={foto.hoogte}
       sizes={sizes}
       className={cn("h-auto w-full bg-vlak", className)}
+      style={style}
     />
   );
 }

@@ -44,21 +44,25 @@ export const rijkeTekst = defineArrayMember({
   },
 });
 
+/**
+ * De verplichte beschrijving van een foto, voor zoekmachines en schermlezers.
+ * Gedeeld door de foto's van een dienst of project en de foto vooraf.
+ */
+export const fotoBeschrijving = defineField({
+  name: "alt",
+  type: "string",
+  title: "Beschrijving",
+  description:
+    "Wat is er te zien? Bijvoorbeeld: Bestelbus van een installatiebedrijf met belettering in blauw en wit.",
+  validation: (rule) => rule.required().min(5).max(160),
+});
+
 /** Een foto met een verplichte beschrijving voor zoekmachines en schermlezers. */
 export const foto = defineArrayMember({
   type: "image",
   title: "Foto",
   options: { hotspot: true },
-  fields: [
-    defineField({
-      name: "alt",
-      type: "string",
-      title: "Beschrijving",
-      description:
-        "Wat is er te zien? Bijvoorbeeld: Bestelbus van een installatiebedrijf met belettering in blauw en wit.",
-      validation: (rule) => rule.required().min(5).max(160),
-    }),
-  ],
+  fields: [fotoBeschrijving],
 });
 
 /** Volgorde uit de code, voor de sortering in de Studio. Niet zichtbaar. */
