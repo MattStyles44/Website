@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { SanityFoto } from "@/components/sanity-foto";
 import { dienstPad } from "@/content/paginas";
-import type { ProjectKaart } from "@/lib/cms";
+import type { Foto, ProjectKaart } from "@/lib/cms";
 import { cn } from "@/lib/utils";
 import { maandEnJaar } from "@/lib/weergave";
 
@@ -95,9 +95,41 @@ export function UitgelichteProjecten({
 }
 
 /**
+ * Eén helft van een voor-en-na-paar: de foto met een label erop. Beide foto's
+ * krijgen de verhouding van de foto vooraf, zodat die nooit wordt bijgesneden
+ * en het paar gelijk loopt.
+ */
+function VoorNaFoto({
+  foto,
+  label,
+  verhouding,
+  sizes,
+}: {
+  foto: Foto;
+  label: string;
+  verhouding: Foto;
+  sizes: string;
+}) {
+  return (
+    <figure className="relative">
+      <SanityFoto
+        foto={foto}
+        sizes={sizes}
+        className="rounded-kaart object-cover"
+        style={{ aspectRatio: `${verhouding.breedte} / ${verhouding.hoogte}` }}
+      />
+      <figcaption className="absolute top-3 left-3 rounded-full bg-wit px-3 py-1 text-sm leading-tight font-bold text-navy">
+        {label}
+      </figcaption>
+    </figure>
+  );
+}
+
+/**
  * Een project op /projecten: alle foto's als collage, titel, plaats en maand,
  * samenvatting en links naar de diensten. `groot` laat het over de volle
- * breedte lopen.
+ * breedte lopen. Met een foto vooraf staat die als Voor naast de eerste foto
+ * (Na); de overige foto's staan eronder.
  */
 export function ProjectBlok({
   project,
@@ -107,6 +139,11 @@ export function ProjectBlok({
   groot?: boolean;
 }) {
   const [eerste, ...overige] = project.fotos;
+  // Een foto vooraf alleen met een resultaat ernaast.
+  const voor = eerste ? project.voorFoto : undefined;
+  const paarSizes = groot
+    ? "(min-width: 72rem) 360px, (min-width: 64rem) 33vw, (min-width: 40rem) 50vw, 100vw"
+    : "(min-width: 72rem) 264px, (min-width: 48rem) 25vw, (min-width: 40rem) 50vw, 100vw";
   return (
     <article
       className={cn(
@@ -116,18 +153,35 @@ export function ProjectBlok({
     >
       {eerste ? (
         <div className={cn("flex flex-col gap-3", groot && "lg:col-span-8")}>
-          <SanityFoto
-            foto={eerste}
-            sizes={
-              groot
-                ? "(min-width: 72rem) 720px, (min-width: 64rem) 66vw, 100vw"
-                : "(min-width: 72rem) 528px, (min-width: 48rem) 50vw, 100vw"
-            }
-            className={cn(
-              "rounded-kaart object-cover",
-              groot ? "aspect-[3/2]" : "aspect-[4/3]",
-            )}
-          />
+          {voor ? (
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <VoorNaFoto
+                foto={voor}
+                label="Voor"
+                verhouding={voor}
+                sizes={paarSizes}
+              />
+              <VoorNaFoto
+                foto={eerste}
+                label="Na"
+                verhouding={voor}
+                sizes={paarSizes}
+              />
+            </div>
+          ) : (
+            <SanityFoto
+              foto={eerste}
+              sizes={
+                groot
+                  ? "(min-width: 72rem) 720px, (min-width: 64rem) 66vw, 100vw"
+                  : "(min-width: 72rem) 528px, (min-width: 48rem) 50vw, 100vw"
+              }
+              className={cn(
+                "rounded-kaart object-cover",
+                groot ? "aspect-[3/2]" : "aspect-[4/3]",
+              )}
+            />
+          )}
           {overige.length > 0 ? (
             <ul className="grid grid-cols-3 gap-3">
               {overige.map((foto, index) => (

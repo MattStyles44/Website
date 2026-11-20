@@ -70,6 +70,18 @@ const fotosVeld = z
       : [],
   );
 
+/**
+ * Eén losse foto, zoals de foto vooraf van een project: alleen als hij
+ * compleet is (dezelfde regels als in `fotosVeld`), anders undefined.
+ */
+const losseFotoVeld = z
+  .unknown()
+  .optional()
+  .transform((waarde): Foto | undefined => {
+    const foto = fotoSchema.safeParse(waarde);
+    return foto.success ? foto.data : undefined;
+  });
+
 const stapSchema = z.object({ titel: z.string(), tekst: z.string() });
 const vraagSchema = z.object({ vraag: z.string(), antwoord: z.string() });
 
@@ -107,6 +119,7 @@ const projectDocSchema = z.object({
       .object({ categorie: z.string().nullish(), slug: z.string().nullish() })
       .nullable(),
   ),
+  voorFoto: losseFotoVeld,
   fotos: fotosVeld,
 });
 
@@ -134,13 +147,21 @@ export interface ProjectKaart {
   samenvatting: string;
   uitgelicht: boolean;
   diensten: Array<{ categorie: string; slug: string; naam: string }>;
+  /** De situatie vóór het werk; de site toont hem als Voor naast `fotos[0]`. */
+  voorFoto?: Foto;
   fotos: Foto[];
 }
 
 export const categorieQuery = `*[_type == "categorie" && slug == $slug][0]{intro, tekst}`;
 
+/** Per foto het adres, de beschrijving en de afmetingen. */
+const fotoVelden = `{alt, "url": asset->url, "breedte": asset->metadata.dimensions.width, "hoogte": asset->metadata.dimensions.height}`;
+
 /** Elke foto met zijn adres, beschrijving en afmetingen. */
-const fotosProjectie = `fotos[]{alt, "url": asset->url, "breedte": asset->metadata.dimensions.width, "hoogte": asset->metadata.dimensions.height}`;
+const fotosProjectie = `fotos[]${fotoVelden}`;
+
+/** De foto vooraf van een project, met dezelfde velden. */
+const voorFotoProjectie = `voorFoto${fotoVelden}`;
 
 export const dienstQuery = `*[_type == "dienst" && categorie == $categorie && slug == $slug][0]{
   intro, tekst, voordelen, werkwijze[]{titel, tekst}, vragen[]{vraag, antwoord}, garantie,
@@ -150,6 +171,7 @@ export const dienstQuery = `*[_type == "dienst" && categorie == $categorie && sl
 export const projectenQuery = `*[_type == "project" && defined(slug.current)] | order(datum desc, _createdAt desc){
   titel, "slug": slug.current, klant, plaats, datum, samenvatting, uitgelicht,
   "diensten": diensten[]->{categorie, slug},
+  ${voorFotoProjectie},
   ${fotosProjectie}
 }`;
 
@@ -223,12 +245,14 @@ export function maakContentBron(
           waarschuw("Sanity: een project is onleesbaar en wordt overgeslagen.");
           continue;
         }
-        const { diensten, klant, plaats, datum, ...rest } = resultaat.data;
+        const { diensten, klant, plaats, datum, voorFoto, ...rest } =
+          resultaat.data;
         projecten.push({
           ...rest,
           ...(klant ? { klant } : {}),
           ...(plaats ? { plaats } : {}),
           ...(datum ? { datum } : {}),
+          ...(voorFoto ? { voorFoto } : {}),
           diensten: diensten.flatMap((ref) => {
             if (!ref?.categorie || !ref.slug) return [];
             const dienst = getDienst(ref.categorie, ref.slug);
