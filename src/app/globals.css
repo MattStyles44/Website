@@ -110,3 +110,70 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/*
+ * Onthullen bij scrollen: een blok met de klasse `onthul` komt rustig en een
+ * klein stukje van onderen in beeld terwijl het het scherm in schuift. Alleen
+ * CSS (scroll-driven animations), geen JavaScript. De beweging staat alleen
+ * aan met ondersteuning en zonder voorkeur voor minder beweging. Daarbuiten
+ * is niets verborgen: zonder ondersteuning, zonder animaties of met minder
+ * beweging in het systeem staat de inhoud er gewoon.
+ */
+@keyframes onthullen {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .onthul {
+      animation-name: onthullen;
+      animation-duration: auto;
+      animation-timing-function: ease-out;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      /*
+       * Tijdens het binnenkomen, en klaar zodra de bovenkant 10rem in beeld
+       * is. Zo zijn ook hoge blokken meteen helemaal te zien.
+       */
+      animation-range: entry 0% entry 10rem;
+    }
+  }
+}
+
+/*
+ * Paginawissels: de inhoud van <main> staat in een <ViewTransition>
+ * (src/app/layout.tsx). Bij navigeren vloeit de oude pagina kort over in de
+ * nieuwe. De blokken in <main> krijgen geen eigen naam: dan vloeit het beeld
+ * als geheel over, op de plek waar het staat. Zo schuift er niets, ook niet
+ * als je eerst naar beneden had gescrold, en blijven de kop en de balk
+ * onderaan rustig staan.
+ */
+#inhoud > * {
+  view-transition-name: none !important;
+}
+
+/* Klikken tijdens een overgang gaan niet verloren. */
+::view-transition {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 250ms;
+    animation-timing-function: ease-out;
+  }
+}
+
+/* Geen paginaovergang voor wie minder beweging wil. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

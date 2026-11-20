@@ -6,6 +6,15 @@ import type { Foto, ProjectKaart } from "@/lib/cms";
 import { cn } from "@/lib/utils";
 import { maandEnJaar } from "@/lib/weergave";
 
+/**
+ * Een projectfoto zoomt bij hover iets in, binnen een kader met dezelfde
+ * afgeronde hoeken. Het kader knipt de foto af, zodat die nooit uit zijn
+ * kader groeit en er niets verschuift. Niet voor wie minder beweging wil.
+ */
+const fotoKader = "group/foto isolate overflow-hidden";
+const fotoZoom =
+  "transition-transform duration-200 ease-out group-hover/foto:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover/foto:scale-100";
+
 /** Plaats en maand van een project, zoals "Groningen · oktober 2026". */
 function ProjectGegevens({ project }: { project: ProjectKaart }) {
   const { plaats, datum } = project;
@@ -49,24 +58,32 @@ export function UitgelichteProjecten({
           >
             <article
               className={cn(
-                "flex flex-col gap-5",
+                "onthul flex flex-col gap-5",
                 alleen && "lg:grid lg:grid-cols-12 lg:items-center lg:gap-8",
               )}
             >
               {foto ? (
-                <SanityFoto
-                  foto={foto}
-                  sizes={
-                    groot
-                      ? "(min-width: 72rem) 636px, (min-width: 64rem) 58vw, 100vw"
-                      : "(min-width: 72rem) 452px, (min-width: 64rem) 40vw, 100vw"
-                  }
+                <div
                   className={cn(
-                    "rounded-kaart object-cover",
-                    groot ? "aspect-[4/3]" : "aspect-[3/2]",
+                    fotoKader,
+                    "rounded-kaart",
                     alleen && "lg:col-span-7",
                   )}
-                />
+                >
+                  <SanityFoto
+                    foto={foto}
+                    sizes={
+                      groot
+                        ? "(min-width: 72rem) 636px, (min-width: 64rem) 58vw, 100vw"
+                        : "(min-width: 72rem) 452px, (min-width: 64rem) 40vw, 100vw"
+                    }
+                    className={cn(
+                      "rounded-kaart object-cover",
+                      fotoZoom,
+                      groot ? "aspect-[4/3]" : "aspect-[3/2]",
+                    )}
+                  />
+                </div>
               ) : null}
               <div
                 className={cn(
@@ -111,11 +128,11 @@ function VoorNaFoto({
   sizes: string;
 }) {
   return (
-    <figure className="relative">
+    <figure className={cn("relative rounded-kaart", fotoKader)}>
       <SanityFoto
         foto={foto}
         sizes={sizes}
-        className="rounded-kaart object-cover"
+        className={cn("rounded-kaart object-cover", fotoZoom)}
         style={{ aspectRatio: `${verhouding.breedte} / ${verhouding.hoogte}` }}
       />
       <figcaption className="absolute top-3 left-3 rounded-full bg-wit px-3 py-1 text-sm leading-tight font-bold text-navy">
@@ -147,7 +164,7 @@ export function ProjectBlok({
   return (
     <article
       className={cn(
-        "flex flex-col gap-6",
+        "onthul flex flex-col gap-6",
         groot && "lg:grid lg:grid-cols-12 lg:items-start lg:gap-8",
       )}
     >
@@ -169,27 +186,36 @@ export function ProjectBlok({
               />
             </div>
           ) : (
-            <SanityFoto
-              foto={eerste}
-              sizes={
-                groot
-                  ? "(min-width: 72rem) 720px, (min-width: 64rem) 66vw, 100vw"
-                  : "(min-width: 72rem) 528px, (min-width: 48rem) 50vw, 100vw"
-              }
-              className={cn(
-                "rounded-kaart object-cover",
-                groot ? "aspect-[3/2]" : "aspect-[4/3]",
-              )}
-            />
+            <div className={cn(fotoKader, "rounded-kaart")}>
+              <SanityFoto
+                foto={eerste}
+                sizes={
+                  groot
+                    ? "(min-width: 72rem) 720px, (min-width: 64rem) 66vw, 100vw"
+                    : "(min-width: 72rem) 528px, (min-width: 48rem) 50vw, 100vw"
+                }
+                className={cn(
+                  "rounded-kaart object-cover",
+                  fotoZoom,
+                  groot ? "aspect-[3/2]" : "aspect-[4/3]",
+                )}
+              />
+            </div>
           )}
           {overige.length > 0 ? (
             <ul className="grid grid-cols-3 gap-3">
               {overige.map((foto, index) => (
-                <li key={`${index}-${foto.url}`}>
+                <li
+                  key={`${index}-${foto.url}`}
+                  className={cn(fotoKader, "rounded-veld")}
+                >
                   <SanityFoto
                     foto={foto}
                     sizes="(min-width: 72rem) 240px, (min-width: 48rem) 16vw, 33vw"
-                    className="aspect-square rounded-veld object-cover"
+                    className={cn(
+                      "aspect-square rounded-veld object-cover",
+                      fotoZoom,
+                    )}
                   />
                 </li>
               ))}

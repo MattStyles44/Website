@@ -11,15 +11,19 @@ export interface KaartProps {
   kopNiveau?: "h2" | "h3" | "h4";
 }
 
-/** Vlakke kaart met afgeronde hoeken, zonder schaduw. */
+/**
+ * Vlakke kaart met afgeronde hoeken, zonder schaduw. Komt rustig in beeld bij
+ * scrollen (`onthul`). Een klikbare kaart komt bij hover iets omhoog, behalve
+ * voor wie minder beweging wil.
+ */
 export function Kaart({ titel, href, children, kopNiveau = "h3" }: KaartProps) {
   const Kop = kopNiveau;
   return (
     <article
       className={cn(
-        "relative flex h-full flex-col gap-3 rounded-kaart border-2 border-vlak bg-wit p-5 text-navy sm:p-8",
+        "onthul relative flex h-full flex-col gap-3 rounded-kaart border-2 border-vlak bg-wit p-5 text-navy sm:p-8",
         href &&
-          "group transition-colors duration-150 ease-out hover:border-blauw motion-reduce:transition-none",
+          "group transition-[border-color,translate] duration-150 ease-out hover:-translate-y-1 hover:border-blauw motion-reduce:transition-none motion-reduce:hover:translate-y-0",
       )}
     >
       <Kop className="font-display text-2xl leading-kop font-bold">
